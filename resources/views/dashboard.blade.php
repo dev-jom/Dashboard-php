@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+    <h1 class="text-center py-3">Dashboard de Testes da Sprint 146</h1>
     <div class="container-fluid">
         <h1 class="text-center text-white mb-4">
             <i class="fas fa-chart-line me-2"></i>Dashboard Sprint 145
@@ -38,7 +39,7 @@
                 <div class="card stats-card">
                     <div class="card-body text-center">
                         <h6 class="card-title text-muted">Total de Estruturas</h6>
-                        <h2 class="display-4 fw-bold text-info">{{ count($estruturas) }}</h2>
+                        <h2 class="display-4 fw-bold text-info">{{ count($estruturas ?? []) }}</h2>
                         <i class="fas fa-layer-group fa-2x text-info"></i>
                     </div>
                 </div>
@@ -47,7 +48,7 @@
                 <div class="card stats-card">
                     <div class="card-body text-center">
                         <h6 class="card-title text-muted">Testadores Ativos</h6>
-                        <h2 class="display-4 fw-bold text-warning">{{ count($porPessoa) }}</h2>
+                        <h2 class="display-4 fw-bold text-warning">{{ count($porPessoa ?? []) }}</h2>
                         <i class="fas fa-users fa-2x text-warning"></i>
                     </div>
                 </div>
@@ -86,14 +87,14 @@
         new Chart(document.getElementById('graficoResultados'), {
             type: 'doughnut',
             data: {
-                labels: {!! json_encode(array_keys($totais)) !!},
+                labels: {!! json_encode(array_keys($totais ?? [])) !!},
                 datasets: [{
-                    data: {!! json_encode(array_values($totais)) !!},
+                    data: {!! json_encode(array_values($totais ?? [])) !!},
                     backgroundColor: [
-                        colors.aprovado,
-                        colors.reprovado,
-                        colors.pendente,
-                        colors.outros
+                        colors.aprovado = "#28a745",
+                        colors.reprovado = "#dc3545",
+                        colors.pendente = "#ffc107",
+                        colors.outros = "#6c757d"
                     ]
                 }]
             },
@@ -107,10 +108,10 @@
         new Chart(document.getElementById('graficoPessoas'), {
             type: 'bar',
             data: {
-                labels: {!! json_encode(array_keys($porPessoa)) !!},
+                labels: {!! json_encode(array_keys($porPessoa ?? [])) !!},
                 datasets: [{
                     label: 'Testes Realizados',
-                    data: {!! json_encode(array_values($porPessoa)) !!},
+                    data: {!! json_encode(array_values($porPessoa ?? [])) !!},
                     backgroundColor: colors.responsavel,
                     borderRadius: 5
                 }]
@@ -127,10 +128,10 @@
         new Chart(document.getElementById('graficoEstruturas'), {
             type: 'bar',
             data: {
-                labels: {!! json_encode(array_keys($estruturas)) !!},
+                labels: {!! json_encode(array_keys($estruturas ?? [])) !!},
                 datasets: [{
                     label: 'Quantidade de Testes',
-                    data: {!! json_encode(array_values($estruturas)) !!},
+                    data: {!! json_encode(array_values($estruturas ?? [])) !!},
                     backgroundColor: colors.estrutura,
                     borderRadius: 5
                 }]
