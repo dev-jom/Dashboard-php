@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,51 +7,49 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-    <h1 class="text-center py-3">Dashboard de Testes da Sprint 146</h1>
+<body class="body>
+    <h1 class="text-center py-3 text-white">Dashboard de Testes da Sprint 146</h1>
     <div class="container-fluid">
-        <h1 class="text-center text-white mb-4">
-            <i class="fas fa-chart-line me-2"></i>Dashboard Sprint 145
-        </h1>
         <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card stats-card">
-                    <div class="card-body text-center">
-                        <h6 class="card-title text-muted">Total de Tickets</h6>
-                        <h2 class="display-4 fw-bold text-primary">{{ $total_tickets }}</h2>
-                        <i class="fas fa-ticket-alt fa-2x text-primary"></i>
-                    </div>
-                </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-ticket-alt"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Total de Tickets</span>
+                <span class="info-box-number">{{ $total_tickets }}</span>
+              </div>
             </div>
-            <div class="col-md-3">
-                <div class="card stats-card">
-                    <div class="card-body text-center">
-                        <h6 class="card-title text-muted">Taxa de Aprovação</h6>
-                        <h2 class="display-4 fw-bold text-success">{{ number_format($percentual_aprovacao, 1) }}%</h2>
-                        <i class="fas fa-check-circle fa-2x text-success"></i>
-                    </div>
-                </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-check-circle"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Taxa de Aprovação</span>
+                <span class="info-box-number">{{ number_format($percentual_aprovacao, 1) }}<small>%</small></span>
+              </div>
             </div>
-            <div class="col-md-3">
-                <div class="card stats-card">
-                    <div class="card-body text-center">
-                        <h6 class="card-title text-muted">Total de Estruturas</h6>
-                        <h2 class="display-4 fw-bold text-info">{{ count($estruturas ?? []) }}</h2>
-                        <i class="fas fa-layer-group fa-2x text-info"></i>
-                    </div>
-                </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-layer-group"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Total de Estruturas</span>
+                <span class="info-box-number">{{ count($estruturas ?? []) }}</span>
+              </div>
             </div>
-            <div class="col-md-3">
-                <div class="card stats-card">
-                    <div class="card-body text-center">
-                        <h6 class="card-title text-muted">Testadores Ativos</h6>
-                        <h2 class="display-4 fw-bold text-warning">{{ count($porPessoa ?? []) }}</h2>
-                        <i class="fas fa-users fa-2x text-warning"></i>
-                    </div>
-                </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-users"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Quantidade de Testadores</span>
+                <span class="info-box-number">{{ count($porPessoa ?? []) }}</span>
+              </div>
             </div>
+          </div>
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -79,10 +76,7 @@
         const colors = {
             aprovado: root.getPropertyValue('--cor-aprovado').trim(),
             reprovado: root.getPropertyValue('--cor-reprovado').trim(),
-            pendente: root.getPropertyValue('--cor-pendente').trim(),
-            outros: root.getPropertyValue('--cor-outros').trim(),
-            responsavel: root.getPropertyValue('--cor-responsavel').trim(),
-            estrutura: root.getPropertyValue('--cor-estrutura').trim()
+            validado: root.getPropertyValue('--cor-validado').trim(),
         };
         new Chart(document.getElementById('graficoResultados'), {
             type: 'doughnut',
@@ -91,10 +85,9 @@
                 datasets: [{
                     data: {!! json_encode(array_values($totais ?? [])) !!},
                     backgroundColor: [
-                        colors.aprovado = "#28a745",
-                        colors.reprovado = "#dc3545",
-                        colors.pendente = "#ffc107",
-                        colors.outros = "#6c757d"
+                        colors.aprovado,
+                        colors.validado, 
+                        colors.reprovado,
                     ]
                 }]
             },

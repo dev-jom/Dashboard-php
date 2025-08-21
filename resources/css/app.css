@@ -9,3 +9,13 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+:root {
+    --cor-aprovado: #28a745;
+    --cor-validado: #0042cf;
+    --cor-reprovado: #dc3545;
+    --cor-responsavel: #17a2b8;
+    --cor-estrutura:  #6f42c1;
+    --cor-responsavel: #17a2b8;  /* sugestão (info) */
+    --cor-estrutura:  #6f42c1;   /* sugestão (purple) */
+  }

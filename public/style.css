@@ -1,0 +1,69 @@
+/* Info Box base */
+body {
+  background-color: #464C56;
+}
+
+.info-box {
+  display: flex;
+  min-height: 80px;
+  background: #373737;
+  width: 100%;
+  border-radius: .25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,.075);
+  margin-bottom: 1rem;
+  align-items: stretch;
+  color: #fff;
+}
+
+.info-box .info-box-icon {
+  border-top-left-radius: .25rem;
+  border-bottom-left-radius: .25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;           /* largura do bloco do ícone */
+  font-size: 1.75rem;
+  color: #fff;
+}
+
+.info-box .info-box-content {
+  flex: 1;
+  padding: .75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.15rem;
+}
+
+.info-box .info-box-text {
+  display: block;
+  font-size: 1.20rem;
+  color: #fff;
+  margin: 0;
+  font-weight: bold;
+  
+}
+
+.info-box .info-box-number {
+  display: block;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-top: .25rem;
+}
+
+/* Cores utilitárias (usando as do Bootstrap para combinar) */
+.bg-info    { background-color: #17a2b8 !important; }
+.bg-success { background-color: #28a745 !important; }
+.bg-warning { background-color: #ffc107 !important; color: #1f2d3d !important; }
+.bg-danger  { background-color: #dc3545 !important; }
+
+/* Elevação (sombra mais forte) */
+.elevation-1 { box-shadow: 0 .125rem .25rem rgba(0,0,0,.15) !important; }
+
+/* Ajustes responsivos */
+@media (max-width: 575.98px) {
+  .info-box { min-height: 72px; }
+  .info-box .info-box-icon { width: 60px; font-size: 1.5rem; }
+  .info-box .info-box-number { font-size: 1.1rem; }
+}
