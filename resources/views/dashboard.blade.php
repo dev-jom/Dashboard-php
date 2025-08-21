@@ -10,7 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="/style.css">
 </head>
-<body class="body>
+<body>
     <h1 class="text-center py-3 text-white">Dashboard de Testes da Sprint 146</h1>
     <div class="container-fluid">
         <div class="row mb-4">
@@ -53,16 +53,21 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="chart-container">
-                    <canvas id="graficoResultados"></canvas>
+                <div class="card align-items-center">
+                  <div class="card-header w-100 justify-content-between align-items-center">
+                    <h3 class="card-title mb-0 d-flex justify-content-center">STATUS DOS TESTES</h3>
+                  </div>
+                  <div class="card-body">
+                  <canvas id="donutChart" style="min-height: 250px;height: 400px;max-height: 400px;max-width: 896px;display: block;width: 896px;box-sizing: border-box;" width="896" height="400"></canvas>
+                  </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="chart-container">
-                    <canvas id="graficoPessoas"></canvas>
-                </div>
-            </div>
-        </div>
+             </div>
+             <div class="col-md-6">
+                 <div class="chart-container">
+                     <canvas id="graficoPessoas"></canvas>
+                 </div>
+             </div>
+         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="chart-container">
@@ -78,7 +83,7 @@
             reprovado: root.getPropertyValue('--cor-reprovado').trim(),
             validado: root.getPropertyValue('--cor-validado').trim(),
         };
-        new Chart(document.getElementById('graficoResultados'), {
+        new Chart(document.getElementById('donutChart'), {
             type: 'doughnut',
             data: {
                 labels: {!! json_encode(array_keys($totais ?? [])) !!},
@@ -93,8 +98,8 @@
             },
             options: {
                 plugins: {
-                    title: { display: true, text: 'Status dos Testes', font: { size: 16 } },
-                    legend: { position: 'bottom' }
+                    title: { display: true, font: { size: 16 } },
+                    legend: { position: 'bottom'}
                 }
             }
         });

@@ -53,17 +53,70 @@ body {
 }
 
 /* Cores utilitárias (usando as do Bootstrap para combinar) */
-.bg-info    { background-color: #17a2b8 !important; }
-.bg-success { background-color: #28a745 !important; }
-.bg-warning { background-color: #ffc107 !important; color: #1f2d3d !important; }
-.bg-danger  { background-color: #dc3545 !important; }
-
-/* Elevação (sombra mais forte) */
-.elevation-1 { box-shadow: 0 .125rem .25rem rgba(0,0,0,.15) !important; }
-
-/* Ajustes responsivos */
-@media (max-width: 575.98px) {
-  .info-box { min-height: 72px; }
-  .info-box .info-box-icon { width: 60px; font-size: 1.5rem; }
-  .info-box .info-box-number { font-size: 1.1rem; }
+/* Card de donut (aparência geral) */
+.card.card-danger {
+  border: 0;
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.15);
+  border-radius: .5rem;
+  overflow: hidden;
+  height: 100%;
 }
+
+/* Cabeçalho vermelho com texto branco */
+.card.card-danger .card-header {
+  background-color: #dc3545; /* reprovado */
+  color: #fff;
+  padding: .75rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Título do card */
+.card.card-danger .card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Botões de ferramentas (icons) */
+.card.card-danger .card-tools .btn.btn-tool {
+  color: rgba(255,255,255,.9);
+  padding: .25rem .5rem;
+}
+.card.card-danger .card-tools .btn.btn-tool:hover {
+  color: #fff;
+}
+
+/* Corpo do card */
+.card.card-danger .card-body {
+  background: #fff;
+  padding: 1rem;
+  width: 50%;
+}
+
+/* Tamanho do canvas do donut */
+#donutChart,
+.chart-fixed-250 {
+  min-height: 250px;
+  height: 500px;
+  max-height: 250px;
+  max-width: 100%;
+  display: block;
+  width: 100%;
+}
+
+/* Ajuste opcional para remover margem inferior do último elemento */
+.card.card-danger .card-body > :last-child {
+  margin-bottom: 0;
+}
+
+/* Responsivo */
+@media (max-width: 575.98px) {
+  #donutChart,
+  .chart-fixed-250 {
+    height: 220px;
+    min-height: 220px;
+  }
+}
+
+
