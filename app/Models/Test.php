@@ -10,6 +10,7 @@ class Test extends Model
         'tipo_teste',
         'numero_ticket',
         'resumo_tarefa',
+        'link_tarefa',
         'estrutura',
         'atribuido_a',
         'resultado',

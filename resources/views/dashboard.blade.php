@@ -57,8 +57,23 @@
                   <div class="card-header w-100 justify-content-between align-items-center">
                     <h3 class="card-title mb-0 d-flex justify-content-center">STATUS DOS TESTES</h3>
                   </div>
-                  <div class="card-body">
-                  <canvas id="donutChart" style="min-height: 250px;height: 400px;max-height: 400px;max-width: 896px;display: block;width: 896px;box-sizing: border-box;" width="896" height="400"></canvas>
+                  <div class="card-body w-100">
+                    <div class="row g-3 align-items-start">
+                      <div id="donutCol" class="col-12 d-flex justify-content-center">
+                        <canvas id="donutChart" style="min-height: 250px;height: 400px;max-height: 400px;max-width: 896px;display: block;width: 100%;box-sizing: border-box;" height="400"></canvas>
+                      </div>
+                      <div id="ticketCol" class="col-lg-5 col-md-5 col-sm-12 d-none">
+                        <div id="ticketPanel" class="border rounded p-2 d-none">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">Detalhes por Status</h5>
+                            <button type="button" id="closeTicketPanel" class="btn btn-sm btn-outline-secondary">Fechar</button>
+                          </div>
+                          <div id="ticketPanelBody">
+                            <p class="text-muted mb-0">Clique em um segmento do gráfico para ver os tickets.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
              </div>
@@ -83,6 +98,11 @@
             reprovado: root.getPropertyValue('--cor-reprovado').trim(),
             validado: root.getPropertyValue('--cor-validado').trim(),
         };
+        // Dados de tickets por status vindos do backend (opcional)
+        const ticketsRaw = {!! json_encode($ticketsPorStatus ?? []) !!};
+        const ticketsByStatus = Object.fromEntries(
+          Object.entries(ticketsRaw).map(([k, v]) => [String(k).toLowerCase(), v])
+        );
         new Chart(document.getElementById('donutChart'), {
             type: 'doughnut',
             data: {
@@ -103,6 +123,60 @@
                 }
             }
         });
+        // Clique no donut para abrir/atualizar painel (na mesma card)
+        (function(){
+          const donutCanvas = document.getElementById('donutChart');
+          const ticketPanel = document.getElementById('ticketPanel');
+          const ticketPanelBody = document.getElementById('ticketPanelBody');
+          const closeTicketPanel = document.getElementById('closeTicketPanel');
+          const donutCol = document.getElementById('donutCol');
+          const ticketCol = document.getElementById('ticketCol');
+          if (!donutCanvas || !ticketPanel) return;
+          donutCanvas.addEventListener('click', function(evt) {
+            const chart = Chart.getChart(donutCanvas);
+            if (!chart) return;
+            const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+            if (!points.length) return;
+            const idx = points[0].index;
+            const label = (chart.data.labels?.[idx] ?? '').toString();
+            const items = ticketsByStatus[String(label).toLowerCase()] ?? [];
+            if (!items.length) {
+              ticketPanelBody.innerHTML = `<p class="text-muted mb-0">Sem tickets para "${label}".</p>`;
+            } else {
+              const html = items.map(raw => {
+                const isStr = typeof raw === 'string';
+                const item = isStr ? { titulo: raw } : raw;
+                const title = item.titulo || item.title || item.nome || item.descricao || (isStr ? raw : `Ticket ${item.id ?? ''}`);
+                let code = item.id || item.numero || item.num || item.codigo || item.code || item.chave || item.key;
+                if (!code && isStr) {
+                  const m = String(raw).match(/([A-Za-z]{2,}-?\d+|\b\d{2,}\b)/);
+                  if (m) code = m[1];
+                }
+                const badgeInner = code ? `#${code}` : '';
+                const badge = code
+                  ? (item.url
+                      ? `<a href="${item.url}" target="_blank" rel="noopener" class="text-decoration-none"><span class="badge bg-secondary">${badgeInner}</span></a>`
+                      : `<span class="badge bg-secondary">${badgeInner}</span>`)
+                  : '';
+                // Title (resumo) não é clicável; somente o badge
+                return `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${title}</span>${badge}</li>`;
+              }).join('');
+              ticketPanelBody.innerHTML = `<h6 class="mb-2">Tickets: ${label} <span class=\"text-muted\">(${items.length})</span></h6><ul class="list-group list-group-flush">${html}</ul>`;
+            }
+            // Mostrar coluna de tickets e reduzir coluna do donut
+            ticketCol?.classList.remove('d-none');
+            donutCol?.classList.remove('col-12');
+            donutCol?.classList.add('col-lg-7','col-md-7','col-sm-12');
+            ticketPanel.classList.remove('d-none');
+          });
+          closeTicketPanel?.addEventListener('click', () => {
+            ticketPanel.classList.add('d-none');
+            // Esconder coluna de tickets e centralizar novamente o donut
+            ticketCol?.classList.add('d-none');
+            donutCol?.classList.remove('col-lg-7','col-md-7','col-sm-12');
+            donutCol?.classList.add('col-12');
+          });
+        })();
         new Chart(document.getElementById('graficoPessoas'), {
             type: 'bar',
             data: {

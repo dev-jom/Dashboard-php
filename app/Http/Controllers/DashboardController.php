@@ -41,6 +41,26 @@ class DashboardController extends Controller
             ->groupBy('atribuido_a')
             ->pluck('total', 'atribuido_a')
             ->toArray();
+
+        // Tickets grouped by status (for donut click panel)
+        $validResults = ['Aprovado', 'Reprovado', 'Validado'];
+        $ticketsCollection = Test::select('resultado', 'numero_ticket', 'resumo_tarefa', 'link_tarefa', 'data_teste')
+            ->whereIn('resultado', $validResults)
+            ->orderByDesc('data_teste')
+            ->get();
+
+        $ticketsPorStatus = $ticketsCollection
+            ->groupBy('resultado')
+            ->map(function ($group) {
+                return $group->map(function ($t) {
+                    return [
+                        'id' => $t->numero_ticket,
+                        'titulo' => trim($t->resumo_tarefa ?: ('Ticket ' . $t->numero_ticket)),
+                        'url' => $t->link_tarefa,
+                    ];
+                })->values();
+            })
+            ->toArray();
             
         return view('dashboard', [
             'total_tickets' => $totalTickets,
@@ -48,6 +68,7 @@ class DashboardController extends Controller
             'estruturas' => $structures,
             'totais' => $totais,
             'porPessoa' => $porPessoa,
+            'ticketsPorStatus' => $ticketsPorStatus,
         ]);
     }
 }
