@@ -98,6 +98,11 @@
             reprovado: root.getPropertyValue('--cor-reprovado').trim(),
             validado: root.getPropertyValue('--cor-validado').trim(),
         };
+        // Cor padrão para textos/legendas dos gráficos
+        const legendColor = '#ffffff';
+        if (window.Chart && Chart.defaults) {
+            Chart.defaults.color = legendColor;
+        }
         // Dados de tickets por status vindos do backend (opcional)
         const ticketsRaw = {!! json_encode($ticketsPorStatus ?? []) !!};
         const ticketsByStatus = Object.fromEntries(
@@ -119,7 +124,7 @@
             options: {
                 plugins: {
                     title: { display: true, font: { size: 16 } },
-                    legend: { position: 'bottom'}
+                    legend: { position: 'bottom', labels: { color: '#373737' } }
                 }
             }
         });

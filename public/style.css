@@ -80,7 +80,7 @@ body {
 
 /* Botões de ferramentas (icons) */
 .card.card-danger .card-tools .btn.btn-tool {
-  color: rgba(255,255,255,.9);
+  color: rgba(255, 255, 255, 0.9);
   padding: .25rem .5rem;
 }
 .card.card-danger .card-tools .btn.btn-tool:hover {
@@ -120,3 +120,7 @@ body {
 }
 
 
+#ticketPanelBody {
+  max-height: 60vh;
+  overflow-y: auto;
+}
