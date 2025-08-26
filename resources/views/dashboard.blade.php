@@ -51,16 +51,17 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row mb-5">
             <div class="col-md-6">
                 <div class="card align-items-center">
-                  <div class="card-header w-100 justify-content-between align-items-center">
+                  <div class="card-header w-100 justify-content-between align-items-center text-white">
                     <h3 class="card-title mb-0 d-flex justify-content-center">STATUS DOS TESTES</h3>
                   </div>
                   <div class="card-body w-100">
                     <div class="row g-3 align-items-start">
-                      <div id="donutCol" class="col-12 d-flex justify-content-center">
+                      <div id="donutCol" class="col-12 d-flex flex-column align-items-center">
                         <canvas id="donutChart" style="min-height: 250px;height: 400px;max-height: 400px;max-width: 896px;display: block;width: 100%;box-sizing: border-box;" height="400"></canvas>
+                        <div id="donutLegend" class="chart-legend mt-2 align-self-start"></div>
                       </div>
                       <div id="ticketCol" class="col-lg-5 col-md-5 col-sm-12 d-none">
                         <div id="ticketPanel" class="border rounded p-2 d-none">
@@ -97,7 +98,15 @@
             aprovado: root.getPropertyValue('--cor-aprovado').trim(),
             reprovado: root.getPropertyValue('--cor-reprovado').trim(),
             validado: root.getPropertyValue('--cor-validado').trim(),
+            // Novas cores controladas por CSS para gráficos de barras
+            responsavel: (root.getPropertyValue('--cor-responsavel') || '').trim() || '#4e79a7',
+            responsavelHover: (root.getPropertyValue('--cor-responsavel-hover') || '').trim() || '#5a86ba',
+            responsavelBorder: (root.getPropertyValue('--cor-responsavel-borda') || '').trim() || '#335b8e',
+            estrutura: (root.getPropertyValue('--cor-estrutura') || '').trim() || '#f28e2b',
         };
+        // Cores das linhas (grades e bordas dos eixos)
+        const gridColor = (root.getPropertyValue('--chart-grid-color') || '').trim() || 'rgba(255,255,255,0.2)';
+        const axisBorderColor = (root.getPropertyValue('--chart-axis-border-color') || '').trim() || 'rgba(255,255,255,0.5)';
         // Cor padrão para textos/legendas dos gráficos
         const legendColor = '#ffffff';
         if (window.Chart && Chart.defaults) {
@@ -124,7 +133,7 @@
             options: {
                 plugins: {
                     title: { display: true, font: { size: 16 } },
-                    legend: { position: 'bottom', labels: { color: '#373737' } }
+                    legend: { display: false }
                 }
             }
         });
@@ -182,6 +191,37 @@
             donutCol?.classList.add('col-12');
           });
         })();
+        // HTML legend (vertical, bottom-left)
+        (function(){
+          const legendContainer = document.getElementById('donutLegend');
+          const canvasEl = document.getElementById('donutChart');
+          const chart = Chart.getChart(canvasEl);
+          if (!legendContainer || !chart) return;
+          function renderLegend() {
+            legendContainer.innerHTML = '';
+            const items = chart.options.plugins.legend.labels.generateLabels(chart);
+            items.forEach(item => {
+              const li = document.createElement('div');
+              li.className = 'legend-item';
+              li.style.opacity = item.hidden ? '0.5' : '1';
+              li.onclick = () => {
+                chart.toggleDataVisibility(item.index);
+                chart.update();
+                renderLegend();
+              };
+              const box = document.createElement('span');
+              box.className = 'legend-box';
+              box.style.background = item.fillStyle;
+              box.style.borderColor = item.strokeStyle;
+              const label = document.createElement('span');
+              label.textContent = item.text;
+              legendContainer.appendChild(li);
+              li.appendChild(box);
+              li.appendChild(label);
+            });
+          }
+          renderLegend();
+        })();
         new Chart(document.getElementById('graficoPessoas'), {
             type: 'bar',
             data: {
@@ -190,6 +230,9 @@
                     label: 'Testes Realizados',
                     data: {!! json_encode(array_values($porPessoa ?? [])) !!},
                     backgroundColor: colors.responsavel,
+                    hoverBackgroundColor: colors.responsavelHover,
+                    borderColor: colors.responsavelBorder,
+                    borderWidth: 1,
                     borderRadius: 5
                 }]
             },
@@ -198,7 +241,8 @@
                     title: { display: true, text: 'Testes por Responsável', font: { size: 16 } }
                 },
                 scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: gridColor }, border: { color: axisBorderColor } },
+                    x: { grid: { color: gridColor }, border: { color: axisBorderColor } }
                 }
             }
         });
@@ -209,7 +253,7 @@
                 datasets: [{
                     label: 'Quantidade de Testes',
                     data: {!! json_encode(array_values($estruturas ?? [])) !!},
-                    backgroundColor: colors.estrutura,
+                    backgroundColor: '#0042cf',
                     borderRadius: 5
                 }]
             },
@@ -219,7 +263,8 @@
                     title: { display: true, text: 'Distribuição por Estrutura', font: { size: 16 } }
                 },
                 scales: {
-                    x: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    x: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: gridColor }, border: { color: axisBorderColor } },
+                    y: { grid: { color: gridColor }, border: { color: '#ffffff' } }
                 }
             }
         });

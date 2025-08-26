@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $totalTickets = Test::count();
         
         // Calculate approval percentage
-        $approvedCount = Test::where('resultado', 'Aprovado')->count();
+        $approvedCount = Test::whereIn('resultado', ['Aprovado', 'Validado'])->count();
         $totalResults = Test::whereIn('resultado', ['Aprovado', 'Reprovado', 'Validado'])->count();
         $approvalRate = $totalResults > 0 ? round(($approvedCount / $totalResults) * 100, 1) : 0;
         

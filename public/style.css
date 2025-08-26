@@ -1,6 +1,6 @@
 /* Info Box base */
 body {
-  background-color: #464C56;
+  background-color: #171D20;
 }
 
 .info-box {
@@ -78,6 +78,10 @@ body {
   margin: 0;
 }
 
+.card.align-items-center {
+  background-color: #171D20;
+}
+
 /* Botões de ferramentas (icons) */
 .card.card-danger .card-tools .btn.btn-tool {
   color: rgba(255, 255, 255, 0.9);
@@ -123,4 +127,50 @@ body {
 #ticketPanelBody {
   max-height: 60vh;
   overflow-y: auto;
+}
+
+#ticketPanel {
+  background-color: #ffffff; /* antes estava inline */
+}
+
+:root {
+  /* ex: rgba(255,255,255,.2) para semi-transparente */
+  --bs-border-color-translucent: white;
+  /* cor da barra */
+  --cor-responsavel: #0042cf;
+  /* cor ao hover */
+  --cor-responsavel-hover: #003575;
+  /* cor da borda */
+  --cor-responsavel-borda: #002d6d;
+  /* Cores das linhas do gráfico (grades e bordas dos eixos) */
+  /* linhas internas (grid) */
+  --chart-grid-color: rgba(255,255,255,.25);
+  /* linha do eixo */
+  --chart-axis-border-color: rgba(255,255,255,.8);
+}
+
+/* Custom HTML legend for donut chart */
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* left */
+  gap: 6px;
+}
+.chart-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #fff; /* readable on dark bg */
+  user-select: none;
+}
+.chart-legend .legend-item:hover {
+  opacity: 0.85;
+}
+.chart-legend .legend-box {
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(255,255,255,.4);
+  border-radius: 2px;
+  display: inline-block;
 }
