@@ -82,12 +82,30 @@
                  <div class="chart-container">
                      <canvas id="graficoPessoas"></canvas>
                  </div>
+                 <div id="ticketPanelPessoas" class="ticket-panel border rounded p-2 d-none mt-2">
+                   <div class="d-flex justify-content-between align-items-center mb-2">
+                     <h5 class="mb-0">Detalhes por Responsável</h5>
+                     <button type="button" id="closeTicketPanelPessoas" class="btn btn-sm btn-outline-secondary">Fechar</button>
+                   </div>
+                   <div id="ticketPanelBodyPessoas" class="ticket-panel-body">
+                     <p class="text-muted mb-0">Clique em uma barra do gráfico para ver os tickets.</p>
+                   </div>
+                 </div>
              </div>
          </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="chart-container">
                     <canvas id="graficoEstruturas"></canvas>
+                </div>
+                <div id="ticketPanelEstruturas" class="ticket-panel border rounded p-2 d-none mt-2">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">Detalhes por Estrutura</h5>
+                    <button type="button" id="closeTicketPanelEstruturas" class="btn btn-sm btn-outline-secondary">Fechar</button>
+                  </div>
+                  <div id="ticketPanelBodyEstruturas" class="ticket-panel-body">
+                    <p class="text-muted mb-0">Clique em uma barra do gráfico para ver os tickets.</p>
+                  </div>
                 </div>
             </div>
         </div>
@@ -117,6 +135,9 @@
         const ticketsByStatus = Object.fromEntries(
           Object.entries(ticketsRaw).map(([k, v]) => [String(k).toLowerCase(), v])
         );
+        // Dados de tickets por responsável e por estrutura
+        const ticketsByPessoa = {!! json_encode($ticketsPorPessoa ?? []) !!};
+        const ticketsByEstrutura = {!! json_encode($ticketsPorEstrutura ?? []) !!};
         new Chart(document.getElementById('donutChart'), {
             type: 'doughnut',
             data: {
@@ -137,6 +158,43 @@
                 }
             }
         });
+        // Clique no gráfico de Pessoas
+        (function(){
+          const canvas = document.getElementById('graficoPessoas');
+          const panel = document.getElementById('ticketPanelPessoas');
+          const panelBody = document.getElementById('ticketPanelBodyPessoas');
+          const btnClose = document.getElementById('closeTicketPanelPessoas');
+          if (!canvas || !panel) return;
+          canvas.addEventListener('click', function(evt){
+            const chart = Chart.getChart(canvas);
+            if (!chart) return;
+            const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+            if (!points.length) return;
+            const idx = points[0].index;
+            const label = (chart.data.labels?.[idx] ?? '').toString();
+            const items = ticketsByPessoa[label] ?? [];
+            if (!items.length) {
+              panelBody.innerHTML = `<p class="text-muted mb-0">Sem tickets para "${label}".</p>`;
+            } else {
+              const html = items.map(item => {
+                const title = item.titulo || item.title || item.nome || item.descricao || `Ticket ${item.id ?? ''}`;
+                const code = item.id || item.numero || item.num || item.codigo || item.code || item.chave || item.key;
+                const badgeInner = code ? `#${code}` : '';
+                const badge = code
+                  ? (item.url
+                      ? `<a href="${item.url}" target="_blank" rel="noopener" class="text-decoration-none"><span class="badge bg-secondary">${badgeInner}</span></a>`
+                      : `<span class="badge bg-secondary">${badgeInner}</span>`)
+                  : '';
+                return `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${title}</span>${badge}</li>`;
+              }).join('');
+              panelBody.innerHTML = `<h6 class="mb-2">Tickets: ${label} <span class=\"text-muted\">(${items.length})</span></h6><ul class="list-group list-group-flush">${html}</ul>`;
+            }
+            panel.classList.remove('d-none');
+          });
+          btnClose?.addEventListener('click', ()=>{
+            panel.classList.add('d-none');
+          });
+        })();
         // Clique no donut para abrir/atualizar painel (na mesma card)
         (function(){
           const donutCanvas = document.getElementById('donutChart');
@@ -268,6 +326,52 @@
                 }
             }
         });
+        // Clique no gráfico de Estruturas
+        (function(){
+          const canvas = document.getElementById('graficoEstruturas');
+          const panel = document.getElementById('ticketPanelEstruturas');
+          const panelBody = document.getElementById('ticketPanelBodyEstruturas');
+          const btnClose = document.getElementById('closeTicketPanelEstruturas');
+          if (!canvas || !panel) return;
+          canvas.addEventListener('click', function(evt){
+            const chart = Chart.getChart(canvas);
+            if (!chart) return;
+            const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+            if (!points.length) return;
+            const idx = points[0].index;
+            const label = (chart.data.labels?.[idx] ?? '').toString();
+            const items = ticketsByEstrutura[label] ?? [];
+            if (!items.length) {
+              panelBody.innerHTML = `<p class=\"text-muted mb-0\">Sem tickets para \"${label}\".</p>`;
+            } else {
+              const html = items.map(item => {
+                const title = item.titulo || item.title || item.nome || item.descricao || `Ticket ${item.id ?? ''}`;
+                const code = item.id || item.numero || item.num || item.codigo || item.code || item.chave || item.key;
+                const badgeInner = code ? `#${code}` : '';
+                const badge = code
+                  ? (item.url
+                      ? `<a href="${item.url}" target="_blank" rel="noopener" class="text-decoration-none"><span class="badge bg-secondary">${badgeInner}</span></a>`
+                      : `<span class="badge bg-secondary">${badgeInner}</span>`)
+                  : '';
+                return `<li class=\"list-group-item d-flex justify-content-between align-items-center\"><span>${title}</span>${badge}</li>`;
+              }).join('');
+              panelBody.innerHTML = `<h6 class=\"mb-2\">Tickets: ${label} <span class=\"text-muted\">(${items.length})</span></h6><ul class=\"list-group list-group-flush\">${html}</ul>`;
+            }
+            panel.classList.remove('d-none');
+          });
+          btnClose?.addEventListener('click', ()=>{
+            panel.classList.add('d-none');
+          });
+        })();
     </script>
+    <footer class="footer mt-4 py-3">
+      <div class="container text-center">
+        <span class="text-muted d-block d-md-inline">© {{ date('Y') }} Dashboard de Testes</span>
+        <span class="text-muted d-none d-md-inline"> • </span>
+        <span class="text-muted d-block d-md-inline">Feito por 
+          <a href="https://github.com/dev-jom" target="_blank" rel="noopener" class="footer-link">Jonathas</a>
+        </span>
+      </div>
+    </footer>
 </body>
 </html>

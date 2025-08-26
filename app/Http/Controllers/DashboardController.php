@@ -62,6 +62,38 @@ class DashboardController extends Controller
             })
             ->toArray();
             
+        // Tickets grouped by responsible person (for bar chart click panel)
+        $ticketsPorPessoa = Test::select('atribuido_a', 'numero_ticket', 'resumo_tarefa', 'link_tarefa', 'data_teste')
+            ->orderByDesc('data_teste')
+            ->get()
+            ->groupBy('atribuido_a')
+            ->map(function ($group) {
+                return $group->map(function ($t) {
+                    return [
+                        'id' => $t->numero_ticket,
+                        'titulo' => trim($t->resumo_tarefa ?: ('Ticket ' . $t->numero_ticket)),
+                        'url' => $t->link_tarefa,
+                    ];
+                })->values();
+            })
+            ->toArray();
+
+        // Tickets grouped by structure (for bar chart click panel)
+        $ticketsPorEstrutura = Test::select('estrutura', 'numero_ticket', 'resumo_tarefa', 'link_tarefa', 'data_teste')
+            ->orderByDesc('data_teste')
+            ->get()
+            ->groupBy('estrutura')
+            ->map(function ($group) {
+                return $group->map(function ($t) {
+                    return [
+                        'id' => $t->numero_ticket,
+                        'titulo' => trim($t->resumo_tarefa ?: ('Ticket ' . $t->numero_ticket)),
+                        'url' => $t->link_tarefa,
+                    ];
+                })->values();
+            })
+            ->toArray();
+            
         return view('dashboard', [
             'total_tickets' => $totalTickets,
             'percentual_aprovacao' => $approvalRate,
@@ -69,6 +101,8 @@ class DashboardController extends Controller
             'totais' => $totais,
             'porPessoa' => $porPessoa,
             'ticketsPorStatus' => $ticketsPorStatus,
+            'ticketsPorPessoa' => $ticketsPorPessoa,
+            'ticketsPorEstrutura' => $ticketsPorEstrutura,
         ]);
     }
 }

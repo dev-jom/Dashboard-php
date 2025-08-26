@@ -133,6 +133,15 @@ body {
   background-color: #ffffff; /* antes estava inline */
 }
 
+/* Reusable classes for other ticket panels */
+.ticket-panel-body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.ticket-panel {
+  background-color: #ffffff;
+}
+
 :root {
   /* ex: rgba(255,255,255,.2) para semi-transparente */
   --bs-border-color-translucent: white;
@@ -173,4 +182,23 @@ body {
   border: 1px solid rgba(255,255,255,.4);
   border-radius: 2px;
   display: inline-block;
+}
+
+/* Footer */
+.footer {
+  background-color: #171D20;
+  border-top: 1px solid rgba(255,255,255,.1);
+  color: #cccccc;
+}
+.footer .text-muted {
+  color: rgba(255,255,255,.6) !important;
+}
+.footer .footer-link {
+  color: #4ea1ff;
+  text-decoration: none;
+}
+.footer .footer-link:hover,
+.footer .footer-link:focus {
+  color: #76b7ff;
+  text-decoration: underline;
 }
