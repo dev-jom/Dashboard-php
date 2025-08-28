@@ -151,6 +151,12 @@ body {
   --cor-responsavel-hover: #003575;
   /* cor da borda */
   --cor-responsavel-borda: #002d6d;
+  /* cores para os gráficos de status (utilizadas no donut) */
+  --cor-aprovado: #02791e;   /* verde */
+  --cor-validado: #0500FF;   /* ciano/teal */
+  --cor-reprovado: #d30019;  /* vermelho */
+  /* opcional: cor para gráficos de estruturas (barras horizontais) */
+  --cor-estrutura: #f28e2b;
   /* Cores das linhas do gráfico (grades e bordas dos eixos) */
   /* linhas internas (grid) */
   --chart-grid-color: rgba(255,255,255,.25);
@@ -202,3 +208,4 @@ body {
   color: #76b7ff;
   text-decoration: underline;
 }
+

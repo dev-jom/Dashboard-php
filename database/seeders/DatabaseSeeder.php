@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         ]); */
 
         $this->call([
-            TestSeeder::class,
+            //TestSeeder::class,
             TestsJsonSeeder::class,
         ]);
     }

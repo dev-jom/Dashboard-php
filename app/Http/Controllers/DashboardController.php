@@ -22,11 +22,19 @@ class DashboardController extends Controller
         $approvalRate = $totalResults > 0 ? round(($approvedCount / $totalResults) * 100, 1) : 0;
         
         // Get structure counts
-        $structures = Test::select('estrutura')
-            ->selectRaw('count(*) as total')
-            ->groupBy('estrutura')
-            ->pluck('total', 'estrutura')
-            ->toArray();
+        $structures = [];
+        Test::select('estrutura')->chunk(500, function ($chunk) use (&$structures) {
+            foreach ($chunk as $row) {
+                $values = $row->estrutura;
+                // suporta string ou array
+                $list = is_array($values) ? $values : (array) $values;
+                foreach ($list as $val) {
+                    if ($val === null || $val === '') continue;
+                    $key = (string)$val;
+                    $structures[$key] = ($structures[$key] ?? 0) + 1;
+                }
+            }
+        });
 
         // Totals by resultado (status)
         $totais = Test::select('resultado')
@@ -79,19 +87,28 @@ class DashboardController extends Controller
             ->toArray();
 
         // Tickets grouped by structure (for bar chart click panel)
-        $ticketsPorEstrutura = Test::select('estrutura', 'numero_ticket', 'resumo_tarefa', 'link_tarefa', 'data_teste')
+        $ticketsPorEstrutura = [];
+        Test::select('estrutura', 'numero_ticket', 'resumo_tarefa', 'link_tarefa', 'data_teste')
             ->orderByDesc('data_teste')
-            ->get()
-            ->groupBy('estrutura')
-            ->map(function ($group) {
-                return $group->map(function ($t) {
-                    return [
-                        'id' => $t->numero_ticket,
-                        'titulo' => trim($t->resumo_tarefa ?: ('Ticket ' . $t->numero_ticket)),
-                        'url' => $t->link_tarefa,
-                    ];
-                })->values();
-            })
+            ->chunk(500, function ($chunk) use (&$ticketsPorEstrutura) {
+                foreach ($chunk as $t) {
+                    $values = $t->estrutura;
+                    $list = is_array($values) ? $values : (array) $values;
+                    foreach ($list as $val) {
+                        if ($val === null || $val === '') continue;
+                        $key = (string)$val;
+                        $ticketsPorEstrutura[$key] = $ticketsPorEstrutura[$key] ?? collect();
+                        $ticketsPorEstrutura[$key]->push([
+                            'id' => $t->numero_ticket,
+                            'titulo' => trim($t->resumo_tarefa ?: ('Ticket ' . $t->numero_ticket)),
+                            'url' => $t->link_tarefa,
+                        ]);
+                    }
+                }
+            });
+        // Converter collections para arrays indexados
+        $ticketsPorEstrutura = collect($ticketsPorEstrutura)
+            ->map(fn($c) => $c->values())
             ->toArray();
             
         return view('dashboard', [

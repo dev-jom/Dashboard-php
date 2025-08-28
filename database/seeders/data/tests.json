@@ -1,232 +1,262 @@
 [
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20094",
-        "Resumo da Tarefa": "Ajustar comportamento do campo \"Data de Homologação\" no cadastro e edição de licitações",
-        "Estrutura": "PMS",
-        "Atribuído a": "Millene",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "14/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20094"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20116",
-        "Resumo da Tarefa": "Resultado da busca sem exibir o termo pesquisado",
-        "Estrutura": "Acari",
-        "Atribuído a": "Murillo",
-        "Resultado": "Aprovado",
-        "DATA DO TESTE": "14/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20116"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20093",
-        "Resumo da Tarefa": "Ajustar comportamento do campo \"Data de Homologação\" no cadastro e edição de licitações",
-        "Estrutura": "SINERGIA",
-        "Atribuído a": "Millene",
-        "Resultado": "Aprovado",
-        "DATA DO TESTE": "14/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20093"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20094",
-        "Resumo da Tarefa": "Ajustar comportamento do campo \"Data de Homologação\" no cadastro e edição de licitações",
-        "Estrutura": "Araruama",
-        "Atribuído a": "Millene",
-        "Resultado": "Aprovado",
-        "DATA DO TESTE": "14/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20094"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20115",
-        "Resumo da Tarefa": "Usuário com permissão de Ouvidoria não consegue responder chamados",
-        "Estrutura": "SINERGIA",
-        "Atribuído a": "Murillo",
-        "Resultado": "Reprovado",
-        "DATA DO TESTE": "15/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20115"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20094",
-        "Resumo da Tarefa": "Ajustar comportamento do campo \"Data de Homologação\" no cadastro e edição de licitações",
-        "Estrutura": "Araruama",
-        "Atribuído a": "Millene",
-        "Resultado": "Aprovado",
-        "DATA DO TESTE": "15/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20093"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20116",
-        "Resumo da Tarefa": "Resultado da busca sem exibir o termo pesquisado",
-        "Estrutura": "Acari",
-        "Atribuído a": "Murillo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "15/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20116"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20116",
-        "Resumo da Tarefa": "Resultado da busca sem exibir o termo pesquisado",
-        "Estrutura": "Acari",
-        "Atribuído a": "Murillo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "18/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20116"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20094",
-        "Resumo da Tarefa": "Ajustar comportamento do campo \"Data de Homologação\" no cadastro e edição de licitações",
-        "Estrutura": "Araruama",
-        "Atribuído a": "Millene",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "18/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20094"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20093",
-        "Resumo da Tarefa": "Ajustar comportamento do campo \"Data de Homologação\" no cadastro e edição de licitações",
-        "Estrutura": "SINERGIA",
-        "Atribuído a": "Millene",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "18/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20093"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20080",
-        "Resumo da Tarefa": "Ajustar exibição da votação secreta no telão",
-        "Estrutura": "TECVOTO",
-        "Atribuído a": "Murillo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "18/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20080"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20084",
-        "Resumo da Tarefa": "Permitir configuração de votação para expediente",
-        "Estrutura": "TECVOTO",
-        "Atribuído a": "Murillo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "18/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20084"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20138",
-        "Resumo da Tarefa": "Automatizar envio de dados para o telão",
-        "Estrutura": "TECVOTO",
-        "Atribuído a": "Murillo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "18/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20138"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20193",
-        "Resumo da Tarefa": "Criação de API para envio de documentos de ATA e PAUTA da sessão",
-        "Estrutura": "TECVOTO",
-        "Atribuído a": "Murillo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "18/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20193"
-    },
-    {
-        "Tipo de Teste": "VALIDAÇÃO",
-        "#Número do Ticket": "20081",
-        "Resumo da Tarefa": "Ajustar renderização de imagens no PDF para exibição em 100%",
-        "Estrutura": "PM SOSSEGO",
-        "Atribuído a": "Kayo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "19/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20081"
-    },
-    {
-        "Tipo de Teste": "VALIDAÇÃO",
-        "#Número do Ticket": "20095",
-        "Resumo da Tarefa": "Página de Requerimentos não carrega corretamente",
-        "Estrutura": "CM RIACHO DE SANTO ANTONIO",
-        "Atribuído a": "Jeff",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "19/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20095"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20126",
-        "Resumo da Tarefa": "NavBar desalinhada e submenus sobrepostos",
-        "Estrutura": "PMS",
-        "Atribuído a": "Millene",
-        "Resultado": "Aprovado",
-        "DATA DO TESTE": "19/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20126"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20148",
-        "Resumo da Tarefa": "Ordenar listagens de Licitações e Contratos por data",
-        "Estrutura": "LICITAÇÕES",
-        "Atribuído a": "Jeff",
-        "Resultado": "Aprovado",
-        "DATA DO TESTE": "22/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20148"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20198",
-        "Resumo da Tarefa": "Ajustar modais da Ordem do Dia e padronizar modal de Votação",
-        "Estrutura": "TECVOTO",
-        "Atribuído a": "Murillo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "22/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20198"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20211",
-        "Resumo da Tarefa": "Criação da API para verificação de presença do vereador e votação de expediente",
-        "Estrutura": "TECVOTO",
-        "Atribuído a": "Murillo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "22/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20211"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20204",
-        "Resumo da Tarefa": "NavBar desalinhada e submenus sobrepostos, após a tarefa de selos ",
-        "Estrutura": "PMS",
-        "Atribuído a": "Millene",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "25/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20204"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20224",
-        "Resumo da Tarefa": "Refatoração do código de \"abertura\" na ordem do dia",
-        "Estrutura": "TECVOTO",
-        "Atribuído a": "Murillo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "25/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20224"
-    },
-    {
-        "Tipo de Teste": "TESTE HOMOLOG",
-        "#Número do Ticket": "20232",
-        "Resumo da Tarefa": "API do voto de minerva: exibição da foto do parlamentar, status ativo da sessão plenária e cor\\_3 do CM",
-        "Estrutura": "TECVOTO",
-        "Atribuído a": "Murillo",
-        "Resultado": "Validado",
-        "DATA DO TESTE": "25/08/2025",
-        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20232"
-    }
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20094",
+      "Resumo da Tarefa": "Ajustar comportamento do campo Data de Homologação no cadastro e edição de licitações",
+      "Estrutura": ["PMS", "ARARUAMA"],
+      "Atribuído a": "Milene",
+      "Resultado": "Aprovado",
+      "DATA DO TESTE": "14/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20094"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20116",
+      "Resumo da Tarefa": "Resultado da busca sem exibir o termo pesquisado",
+      "Estrutura": "Acari",
+      "Atribuído a": "Murillo",
+      "Resultado": "Aprovado",
+      "DATA DO TESTE": "14/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20116"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20093",
+      "Resumo da Tarefa": "Ajustar comportamento do campo Data de Homologação no cadastro e edição de licitações",
+      "Estrutura": "SINERGIA",
+      "Atribuído a": "Milene",
+      "Resultado": "Aprovado",
+      "DATA DO TESTE": "14/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20093"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20115",
+      "Resumo da Tarefa": "Usuário com permissão de Ouvidoria não consegue responder chamados",
+      "Estrutura": "SINERGIA",
+      "Atribuído a": "Murillo",
+      "Resultado": "Reprovado",
+      "DATA DO TESTE": "15/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20115"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20116",
+      "Resumo da Tarefa": "Resultado da busca sem exibir o termo pesquisado",
+      "Estrutura": "Acari",
+      "Atribuído a": "Murillo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "18/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20116"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20094",
+      "Resumo da Tarefa": "Ajustar comportamento do campo Data de Homologação no cadastro e edição de licitações",
+    "Estrutura": ["PMS", "ARARUAMA"],
+      "Atribuído a": "Milene",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "18/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20094"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20093",
+      "Resumo da Tarefa": "Ajustar comportamento do campo Data de Homologação no cadastro e edição de licitações",
+      "Estrutura": "SINERGIA",
+      "Atribuído a": "Milene",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "18/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20093"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20080",
+      "Resumo da Tarefa": "Ajustar exibição da votação secreta no telão",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Murillo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "18/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20080"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20084",
+      "Resumo da Tarefa": "Permitir configuração de votação para expediente",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Murillo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "18/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20084"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20138",
+      "Resumo da Tarefa": "Automatizar envio de dados para o telão",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Murillo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "18/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20138"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20193",
+      "Resumo da Tarefa": "Criação de API para envio de documentos de ATA e PAUTA da sessão",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Murillo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "18/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20193"
+  },
+  {
+      "Tipo de Teste": "VALIDAÇÃO",
+      "#Número do Ticket": "20081",
+      "Resumo da Tarefa": "Ajustar renderização de imagens no PDF para exibição em 100%",
+      "Estrutura": "PM SOSSEGO",
+      "Atribuído a": "Kayo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "19/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20081"
+  },
+  {
+      "Tipo de Teste": "VALIDAÇÃO",
+      "#Número do Ticket": "20095",
+      "Resumo da Tarefa": "Página de Requerimentos não carrega corretamente",
+      "Estrutura": "CM RIACHO DE SANTO ANTONIO",
+      "Atribuído a": "Jeff",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "19/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20095"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20126",
+      "Resumo da Tarefa": "NavBar desalinhada e submenus sobrepostos",
+      "Estrutura": "PMS",
+      "Atribuído a": "Milene",
+      "Resultado": "Aprovado",
+      "DATA DO TESTE": "19/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20126"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20148",
+      "Resumo da Tarefa": "Ordenar listagens de Licitações e Contratos por data",
+      "Estrutura": "LICITAÇÕES",
+      "Atribuído a": "Jeff",
+      "Resultado": "Aprovado",
+      "DATA DO TESTE": "22/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20148"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20198",
+      "Resumo da Tarefa": "Ajustar modais da Ordem do Dia e padronizar modal de Votação",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Murillo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "22/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20198"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20211",
+      "Resumo da Tarefa": "Criação da API para verificação de presença do vereador e votação de expediente",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Murillo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "22/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20211"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20204",
+      "Resumo da Tarefa": "NavBar desalinhada e submenus sobrepostos  após a tarefa de selos ",
+      "Estrutura": "PMS",
+      "Atribuído a": "Milene",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "25/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20204"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20224",
+      "Resumo da Tarefa": "Refatoração do código de abertura na ordem do dia",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Murillo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "25/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20224"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20232",
+      "Resumo da Tarefa": "API do voto de minerva: exibição da foto do parlamentar  status ativo da sessão plenária e cor\\_3 do CM",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Murillo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "25/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20232"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20181",
+      "Resumo da Tarefa": " Possibiltar apresentação dos Vídeos do Facebook e Instagram no campo **Video** ",
+      "Estrutura": ["PMS", "SINERGIA"],
+      "Atribuído a": "Milene",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "26/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20181"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20230",
+      "Resumo da Tarefa": "Edição de resposta em revisões não atualiza conteúdo no PDF",
+      "Estrutura": "PMS",
+      "Atribuído a": "Murillo",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "26/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20230"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20200",
+      "Resumo da Tarefa": "Replicar filtro avançado de órgão (secretarias) de Licitações para Contratos",
+      "Estrutura": "ARARUAMA",
+      "Atribuído a": "Moab",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "26/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20200"
+  },
+  {
+      "Tipo de Teste": "TESTE HOMOLOG",
+      "#Número do Ticket": "20137",
+      "Resumo da Tarefa": "Criar CRUD de Comissões",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Davi Andrade",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "27/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20137"
+  },
+  {
+      "Tipo de Teste": "TESTE",
+      "#Número do Ticket": "20268",
+      "Resumo da Tarefa": "Exubir apenas ordem do dia ativa",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Caio Andrade",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "27/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20137"
+  },
+  {
+      "Tipo de Teste": "TESTE",
+      "#Número do Ticket": "20267",
+      "Resumo da Tarefa": "Ajustar layout geral para padronização do aplicativo",
+      "Estrutura": "TECVOTO",
+      "Atribuído a": "Caio Andrade",
+      "Resultado": "Validado",
+      "DATA DO TESTE": "27/08/2025",
+      "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20267"
+  }
 ]

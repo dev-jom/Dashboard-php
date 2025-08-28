@@ -19,5 +19,6 @@ class Test extends Model
 
     protected $casts = [
         'data_teste' => 'date:d/m/Y',
+        'estrutura' => 'array',
     ];
 }

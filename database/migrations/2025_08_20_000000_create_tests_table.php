@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('tipo_teste');
             $table->string('numero_ticket');
             $table->text('resumo_tarefa');
-            $table->string('estrutura');
+            $table->json('estrutura');
             $table->string('atribuido_a');
             $table->enum('resultado', ['Aprovado', 'Reprovado', 'Validado']);
             $table->date('data_teste');
