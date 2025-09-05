@@ -134,15 +134,26 @@
         const ticketsByStatus = Object.fromEntries(
           Object.entries(ticketsRaw).map(([k, v]) => [String(k).toLowerCase(), v])
         );
+        // Adiciona porcentagens aos labels
+        const statusLabels = {!! json_encode(array_keys($totais ?? [])) !!};
+        const statusCounts = {!! json_encode(array_values($totais ?? [])) !!};
+        const statusPercentages = {!! json_encode($percentages ?? []) !!};
+        
+        const labelsWithPercentages = statusLabels.map((label, index) => {
+            const count = statusCounts[index];
+            const percentage = statusPercentages[label] || 0;
+            return `${label} (${percentage}% - ${count} testes)`;
+        });
+        
         // Dados de tickets por responsável e por estrutura
         const ticketsByPessoa = {!! json_encode($ticketsPorPessoa ?? []) !!};
         const ticketsByEstrutura = {!! json_encode($ticketsPorEstrutura ?? []) !!};
         new Chart(document.getElementById('donutChart'), {
             type: 'doughnut',
             data: {
-                labels: {!! json_encode(array_keys($totais ?? [])) !!},
+                labels: labelsWithPercentages,
                 datasets: [{
-                    data: {!! json_encode(array_values($totais ?? [])) !!},
+                    data: statusCounts,
                     backgroundColor: [
                         colors.aprovado,
                         colors.validado, 
@@ -365,11 +376,12 @@
     </script>
     <footer class="footer mt-4 py-3">
       <div class="container text-center">
-        <span class="text-muted d-block d-md-inline">© {{ date('Y') }} Dashboard de Testes</span>
+        <span class="text-muted d-block d-md-inline">  {{ date('Y') }} Dashboard de Testes</span>
         <span class="text-muted d-none d-md-inline"> • </span>
         <span class="text-muted d-block d-md-inline">Feito por 
           <a href="https://github.com/dev-jom" target="_blank" rel="noopener" class="footer-link">Jonathas</a>
-        </span>
+        </span> <br>
+        <span>Versão 1.0.0</span>
       </div>
     </footer>
 </body>

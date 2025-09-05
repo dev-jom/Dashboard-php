@@ -43,6 +43,13 @@ class DashboardController extends Controller
             ->pluck('total', 'resultado')
             ->toArray();
 
+        // Calculate percentage for each status
+        $totalTests = array_sum($totais);
+        $percentages = [];
+        foreach ($totais as $status => $count) {
+            $percentages[$status] = $totalTests > 0 ? round(($count / $totalTests) * 100, 1) : 0;
+        }
+
         // Totals by responsible person
         $porPessoa = Test::select('atribuido_a')
             ->selectRaw('count(*) as total')
@@ -116,6 +123,7 @@ class DashboardController extends Controller
             'percentual_aprovacao' => $approvalRate,
             'estruturas' => $structures,
             'totais' => $totais,
+            'percentages' => $percentages,
             'porPessoa' => $porPessoa,
             'ticketsPorStatus' => $ticketsPorStatus,
             'ticketsPorPessoa' => $ticketsPorPessoa,
