@@ -44,7 +44,7 @@
             <div class="info-box mb-3">
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-users"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Quantidade de Testadores</span>
+                <span class="info-box-text">Quantidade de Devs</span>
                 <span class="info-box-number">{{ count($porPessoa ?? []) }}</span>
               </div>
             </div>
@@ -129,29 +129,47 @@
         if (window.Chart && Chart.defaults) {
             Chart.defaults.color = legendColor;
         }
-        // Dados de tickets por status vindos do backend (opcional)
+        // Dados de tickets por status vindos do backend
         const ticketsRaw = {!! json_encode($ticketsPorStatus ?? []) !!};
         const ticketsByStatus = Object.fromEntries(
           Object.entries(ticketsRaw).map(([k, v]) => [String(k).toLowerCase(), v])
         );
-        // Adiciona porcentagens aos labels
+        
+        // Dados para o gráfico de status
         const statusLabels = {!! json_encode(array_keys($totais ?? [])) !!};
         const statusCounts = {!! json_encode(array_values($totais ?? [])) !!};
         const statusPercentages = {!! json_encode($percentages ?? []) !!};
+        const totalTests = statusCounts.reduce((a, b) => a + b, 0);
         
-        const labelsWithPercentages = statusLabels.map((label, index) => {
-            const count = statusCounts[index];
-            const percentage = statusPercentages[label] || 0;
-            return `${label} (${percentage}% - ${count} testes)`;
+        // Labels limpos para os gráficos
+        const labelsWithPercentages = [...statusLabels];
+        
+        // Dados para o gráfico de desenvolvedores
+        const pessoasData = {!! json_encode($porPessoa ?? []) !!};
+        const pessoasLabels = Object.keys(pessoasData);
+        const pessoasCounts = Object.values(pessoasData);
+        const pessoasPercentages = pessoasLabels.map((_, index) => {
+            const count = pessoasCounts[index];
+            return totalTests > 0 ? Math.round((count / totalTests) * 100) : 0;
+        });
+        
+        // Dados para o gráfico de estruturas
+        const estruturasData = {!! json_encode($estruturas ?? []) !!};
+        const estruturasLabels = Object.keys(estruturasData);
+        const estruturasCounts = Object.values(estruturasData);
+        const estruturasPercentages = estruturasLabels.map((_, index) => {
+            const count = estruturasCounts[index];
+            return totalTests > 0 ? Math.round((count / totalTests) * 100) : 0;
         });
         
         // Dados de tickets por responsável e por estrutura
         const ticketsByPessoa = {!! json_encode($ticketsPorPessoa ?? []) !!};
         const ticketsByEstrutura = {!! json_encode($ticketsPorEstrutura ?? []) !!};
-        new Chart(document.getElementById('donutChart'), {
+        // Configuração do gráfico de status
+        const donutChart = new Chart(document.getElementById('donutChart'), {
             type: 'doughnut',
             data: {
-                labels: labelsWithPercentages,
+                labels: statusLabels,
                 datasets: [{
                     data: statusCounts,
                     backgroundColor: [
@@ -164,10 +182,107 @@
             options: {
                 plugins: {
                     title: { display: true, font: { size: 16 } },
-                    legend: { display: false }
+                    legend: { 
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = total ? Math.round((value / total) * 100) : 0;
+                                return `${label}: ${value} testes (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                layout: {
+                    padding: {
+                        bottom: 30 // Reduzido o espaço para a legenda personalizada
+                    }
+                },
+                onHover: (event, chartElement) => {
+                    event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const label = statusLabels[index];
+                        const items = ticketsByStatus[label.toLowerCase()] || [];
+                        const panel = document.getElementById('ticketPanel');
+                        const panelBody = document.getElementById('ticketPanelBody');
+                        
+                        if (items.length) {
+                            const html = items.map(item => {
+                                const title = item.titulo || item.title || item.nome || item.descricao || `Ticket ${item.id ?? ''}`;
+                                const code = item.id || item.numero || item.num || item.codigo || item.code || item.chave || item.key;
+                                const badgeInner = code ? `#${code}` : '';
+                                const badge = code
+                                    ? (item.url
+                                        ? `<a href="${item.url}" target="_blank" rel="noopener" class="text-decoration-none"><span class="badge bg-secondary">${badgeInner}</span></a>`
+                                        : `<span class="badge bg-secondary">${badgeInner}</span>`)
+                                    : '';
+                                return `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${title}</span>${badge}</li>`;
+                            }).join('');
+                            
+                            const total = statusCounts[index] || 0;
+                            const percentage = totalTests > 0 ? Math.round((total / totalTests) * 100) : 0;
+                            
+                            panelBody.innerHTML = `<h6 class="mb-2">${label} <span class="text-muted">(${total} testes - ${percentage}% do total)</span></h6><ul class="list-group list-group-flush">${html}</ul>`;
+                            panel.classList.remove('d-none');
+                        }
+                    }
                 }
             }
         });
+
+        // Cria a legenda personalizada
+        function createCustomLegend() {
+            const legendContainer = document.getElementById('donutLegend');
+            if (!legendContainer) return;
+            
+            legendContainer.innerHTML = '';
+            
+            statusLabels.forEach((label, i) => {
+                const count = statusCounts[i];
+                const percentage = statusPercentages[label] || 0;
+                const color = donutChart.data.datasets[0].backgroundColor[i];
+                
+                const item = document.createElement('div');
+                item.className = 'd-inline-flex align-items-center me-3 mb-2';
+                item.style.cursor = 'pointer';
+                
+                const colorBox = document.createElement('span');
+                colorBox.className = 'd-inline-block me-2';
+                colorBox.style.width = '15px';
+                colorBox.style.height = '15px';
+                colorBox.style.backgroundColor = color;
+                colorBox.style.borderRadius = '3px';
+                
+                const text = document.createElement('span');
+                text.className = 'small text-white';
+                text.textContent = `${label} (${percentage}%)`;
+                
+                item.appendChild(colorBox);
+                item.appendChild(text);
+                
+                // Adiciona evento de clique para destacar/ocultar segmentos
+                item.addEventListener('click', () => {
+                    const meta = donutChart.getDatasetMeta(0);
+                    meta.data[i].hidden = !meta.data[i].hidden;
+                    donutChart.update();
+                    
+                    // Atualiza o estilo do item da legenda
+                    item.style.opacity = meta.data[i].hidden ? '0.5' : '1';
+                });
+                
+                legendContainer.appendChild(item);
+            });
+        }
+        
+        // Atualiza a legenda quando o gráfico for renderizado
+        donutChart.options.animation.onComplete = createCustomLegend;
         // Clique no gráfico de Pessoas
         (function(){
           const canvas = document.getElementById('graficoPessoas');
@@ -197,7 +312,9 @@
                   : '';
                 return `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${title}</span>${badge}</li>`;
               }).join('');
-              panelBody.innerHTML = `<h6 class="mb-2">Tickets: ${label} <span class=\"text-muted\">(${items.length})</span></h6><ul class="list-group list-group-flush">${html}</ul>`;
+              const total = pessoasCounts[idx] || 0;
+              const percentage = pessoasPercentages[idx] || 0;
+              panelBody.innerHTML = `<h6 class="mb-2">${label} <span class=\"text-muted\">(${total} testes - ${percentage}% do total)</span></h6><ul class=\"list-group list-group-flush\">${html}</ul>`;
             }
             panel.classList.remove('d-none');
           });
@@ -293,7 +410,7 @@
         new Chart(document.getElementById('graficoPessoas'), {
             type: 'bar',
             data: {
-                labels: {!! json_encode(array_keys($porPessoa ?? [])) !!},
+                labels: pessoasLabels,
                 datasets: [{
                     label: 'Testes Realizados',
                     data: {!! json_encode(array_values($porPessoa ?? [])) !!},
@@ -306,7 +423,21 @@
             },
             options: {
                 plugins: {
-                    title: { display: true, text: 'Testes por Responsável', font: { size: 16 } }
+                    title: { 
+                        display: true, 
+                        text: 'Testes por Responsável', 
+                        font: { size: 16 } 
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const percentage = pessoasPercentages[context.dataIndex] || 0;
+                                return `${label}: ${value} testes (${percentage}%)`;
+                            }
+                        }
+                    }
                 },
                 scales: {
                     y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: gridColor }, border: { color: axisBorderColor } },
@@ -317,7 +448,7 @@
         new Chart(document.getElementById('graficoEstruturas'), {
             type: 'bar',
             data: {
-                labels: {!! json_encode(array_keys($estruturas ?? [])) !!},
+                labels: estruturasLabels,
                 datasets: [{
                     label: 'Quantidade de Testes',
                     data: {!! json_encode(array_values($estruturas ?? [])) !!},
@@ -328,7 +459,21 @@
             options: {
                 indexAxis: 'y',
                 plugins: {
-                    title: { display: true, text: 'Distribuição por Estrutura', font: { size: 16 } }
+                    title: { 
+                        display: true, 
+                        text: 'Distribuição por Estrutura', 
+                        font: { size: 16 } 
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const percentage = estruturasPercentages[context.dataIndex] || 0;
+                                return `${label}: ${value} testes (${percentage}%)`;
+                            }
+                        }
+                    }
                 },
                 scales: {
                     x: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: gridColor }, border: { color: axisBorderColor } },
@@ -365,7 +510,9 @@
                   : '';
                 return `<li class=\"list-group-item d-flex justify-content-between align-items-center\"><span>${title}</span>${badge}</li>`;
               }).join('');
-              panelBody.innerHTML = `<h6 class=\"mb-2\">Tickets: ${label} <span class=\"text-muted\">(${items.length})</span></h6><ul class=\"list-group list-group-flush\">${html}</ul>`;
+              const total = estruturasCounts[idx] || 0;
+              const percentage = estruturasPercentages[idx] || 0;
+              panelBody.innerHTML = `<h6 class=\"mb-2\">${label} <span class=\"text-muted\">(${total} testes - ${percentage}% do total)</span></h6><ul class=\"list-group list-group-flush\">${html}</ul>`;
             }
             panel.classList.remove('d-none');
           });
