@@ -10,7 +10,46 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1 class="text-center py-3 text-white">Dashboard de Testes da Sprint 146</h1>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">TASH</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle custom-drop" href="#" id="sprintDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ $selectedSprint ?? 'Selecione uma Sprint' }}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="sprintDropdown">
+            <li><a class="dropdown-item {{ !$selectedSprint ? 'active' : '' }}" href="{{ route('dashboard') }}">Todas as Sprints</a></li>
+            @foreach($sprints as $sprintOption)
+            <li><hr class="dropdown-divider"></li>  
+            <li>
+                <a class="dropdown-item {{ ($selectedSprint ?? '147') == $sprintOption ? 'active' : '' }}" 
+                   href="{{ route('dashboard', ['sprint' => $sprintOption]) }}">
+                  {{ $sprintOption }}
+                </a>
+              </li>
+            @endforeach
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+<h1 class="text-center py-3 text-white">
+    @if($selectedSprint)
+        Dashboard de Testes da {{ $selectedSprint }}
+    @else
+        Dashboard de Testes - Todas as Sprints
+    @endif
+</h1>
     <div class="container-fluid">
         <div class="row mb-4">
           <div class="col-12 col-sm-6 col-md-3">
@@ -18,7 +57,7 @@
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-ticket-alt"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">Total de Tickets</span>
-                <span class="info-box-number">{{ $total_tickets }}</span>
+                <span class="info-box-number">{{ $totalTickets }}</span>
               </div>
             </div>
           </div>
@@ -27,25 +66,25 @@
               <span class="info-box-icon bg-success elevation-1"><i class="fas fa-check-circle"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">Taxa de Aprovação</span>
-                <span class="info-box-number">{{ number_format($percentual_aprovacao, 1) }}<small>%</small></span>
+                <span class="info-box-number">{{ $approvalRate }}%</span>
               </div>
             </div>
           </div>
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-layer-group"></i></span>
+              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-sitemap"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">Total de Estruturas</span>
-                <span class="info-box-number">{{ count($estruturas ?? []) }}</span>
+                <span class="info-box-number">{{ $totalStructures ?? 0 }}</span>
               </div>
             </div>
           </div>
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-users"></i></span>
+              <span class="info-box-icon bg-danger  elevation-1"><i class="fas fa-users"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Quantidade de Testadores</span>
-                <span class="info-box-number">{{ count($porPessoa ?? []) }}</span>
+                <span class="info-box-text">Quantidade de Devs</span>
+                <span class="info-box-number">{{ $testersCount ?? 0 }}</span>
               </div>
             </div>
           </div>
@@ -109,270 +148,241 @@
             </div>
         </div>
     </div>
+    <!-- Modal de Tickets por Status -->
+    <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content bg-dark text-white">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ticketModalLabel">Detalhes por Status</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="ticketModalBody">
+            <!-- Populado via JS -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
-        const root = getComputedStyle(document.documentElement);
-        const colors = {
-            aprovado: root.getPropertyValue('--cor-aprovado').trim(),
-            reprovado: root.getPropertyValue('--cor-reprovado').trim(),
-            validado: root.getPropertyValue('--cor-validado').trim(),
-            // Novas cores controladas por CSS para gráficos de barras
-            responsavel: (root.getPropertyValue('--cor-responsavel') || '').trim() || '#4e79a7',
-            responsavelHover: (root.getPropertyValue('--cor-responsavel-hover') || '').trim() || '#5a86ba',
-            responsavelBorder: (root.getPropertyValue('--cor-responsavel-borda') || '').trim() || '#335b8e',
-            estrutura: (root.getPropertyValue('--cor-estrutura') || '').trim() || '#f28e2b',
-        };
-        // Cores das linhas (grades e bordas dos eixos)
-        const gridColor = (root.getPropertyValue('--chart-grid-color') || '').trim() || 'rgba(255,255,255,0.2)';
-        const axisBorderColor = (root.getPropertyValue('--chart-axis-border-color') || '').trim() || 'rgba(255,255,255,0.5)';
-        // Cor padrão para textos/legendas dos gráficos
-        const legendColor = '#ffffff';
-        if (window.Chart && Chart.defaults) {
-            Chart.defaults.color = legendColor;
-        }
-        // Dados de tickets por status vindos do backend (opcional)
-        const ticketsRaw = {!! json_encode($ticketsPorStatus ?? []) !!};
-        const ticketsByStatus = Object.fromEntries(
-          Object.entries(ticketsRaw).map(([k, v]) => [String(k).toLowerCase(), v])
-        );
-        // Adiciona porcentagens aos labels
-        const statusLabels = {!! json_encode(array_keys($totais ?? [])) !!};
-        const statusCounts = {!! json_encode(array_values($totais ?? [])) !!};
-        const statusPercentages = {!! json_encode($percentages ?? []) !!};
-        
-        const labelsWithPercentages = statusLabels.map((label, index) => {
-            const count = statusCounts[index];
-            const percentage = statusPercentages[label] || 0;
-            return `${label} (${percentage}% - ${count} testes)`;
-        });
-        
-        // Dados de tickets por responsável e por estrutura
-        const ticketsByPessoa = {!! json_encode($ticketsPorPessoa ?? []) !!};
-        const ticketsByEstrutura = {!! json_encode($ticketsPorEstrutura ?? []) !!};
-        new Chart(document.getElementById('donutChart'), {
-            type: 'doughnut',
-            data: {
-                labels: labelsWithPercentages,
-                datasets: [{
-                    data: statusCounts,
-                    backgroundColor: [
-                        colors.aprovado,
-                        colors.validado, 
-                        colors.reprovado,
-                    ]
-                }]
-            },
-            options: {
-                plugins: {
-                    title: { display: true, font: { size: 16 } },
-                    legend: { display: false }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dados auxiliares vindos do backend
+            const ticketsPorStatus = {!! json_encode($ticketsPorStatus ?? []) !!}; // { aprovado: [{id,titulo,url}], reprovado: [...], validado: [...] }
+            const statusColors = {
+              'Reprovado': '#d30019',
+              'Validado': '#0500FF',
+              'Aprovado': '#02791e'
+            };
+
+            // Percentuais (com fallback vazio caso não exista a variável no backend)
+            const donutLabels = {!! json_encode(array_keys($percentages ?? [])) !!};
+            const donutPercents = {!! json_encode(array_values($percentages ?? [])) !!};
+
+            // Donut Chart
+            const donutCtx = document.getElementById('donutChart');
+            if (donutCtx) {
+                const donutChart = new Chart(donutCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: donutLabels,
+                        datasets: [{
+                            data: donutPercents,
+                            backgroundColor: donutLabels.map(l => ({
+                              'Reprovado': '#d30019',
+                              'Validado': '#0500FF',
+                              'Aprovado': '#02791e'
+                            })[l] || 'rgba(200,200,200,0.7)'),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                  // Exibe apenas o valor com o símbolo de porcentagem
+                                  label: function(context) {
+                                    const val = context.formattedValue ?? context.parsed;
+                                    return `${val}%`;
+                                  }
+                                }
+                              }
+                        }
+                    }
+                });
+
+                // Clique no segmento -> abre modal com lista de tickets (ou redireciona se houver apenas 1)
+                donutCtx.onclick = function(evt) {
+                  const points = donutChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+                  if (!points || !points.length) return;
+                  const idx = points[0].index;
+                  const statusLabel = donutChart.data.labels[idx]; // e.g., 'Aprovado'
+                  const key = (statusLabel || '').toLowerCase();
+                  const tickets = (ticketsPorStatus && ticketsPorStatus[key]) ? ticketsPorStatus[key] : [];
+                  if (!tickets.length) return;
+                  // Monta lista no modal
+                  const modalTitle = document.getElementById('ticketModalLabel');
+                  const modalBody = document.getElementById('ticketModalBody');
+                  modalTitle.textContent = `Tickets - ${statusLabel}`;
+                  modalBody.innerHTML = tickets.map(t => `
+                    <div class="d-flex align-items-start mb-2">
+                      <span class="badge me-2" style="background-color:${statusColors[statusLabel] || '#6c757d'};color:#fff;">${statusLabel}</span>
+                      <a href="${t.url}" target="_blank" rel="noopener" class="link-light text-decoration-underline">
+                        #${t.id} - ${t.titulo}
+                      </a>
+                    </div>
+                  `).join('');
+                  const bsModal = new bootstrap.Modal(document.getElementById('ticketModal'));
+                  bsModal.show();
+                };
+
+                // Popula a legenda customizada com percentual e contagem
+                const legendEl = document.getElementById('donutLegend');
+                if (legendEl) {
+                  const labels = donutChart.data.labels;
+                  const percents = donutChart.data.datasets[0].data;
+                  const html = labels.map((label, i) => {
+                    const key = (label || '').toLowerCase();
+                    const count = (ticketsPorStatus && ticketsPorStatus[key]) ? ticketsPorStatus[key].length : 0;
+                    const color = donutChart.data.datasets[0].backgroundColor[i];
+                    return `
+                      <div class="legend-item" data-index="${i}" style="cursor:pointer;">
+                        <span class="legend-box" style="background:${color}"></span>
+                        <span>${label}: ${percents[i]}% (${count})</span>
+                      </div>`;
+                  }).join('');
+                  legendEl.innerHTML = html;
+
+                  // Torna a legenda clicável para (des)ativar segmentos APENAS deste donut
+                  legendEl.querySelectorAll('.legend-item').forEach(el => {
+                    el.addEventListener('click', () => {
+                      const idx = Number(el.getAttribute('data-index'));
+                      // Alterna visibilidade do segmento
+                      const currentlyVisible = donutChart.getDataVisibility(idx);
+                      donutChart.toggleDataVisibility(idx);
+                      donutChart.update();
+                      // Opcional: ajustar opacidade visual da legenda ao desativar
+                      el.style.opacity = currentlyVisible ? 0.4 : 1;
+                    });
+                  });
                 }
             }
-        });
-        // Clique no gráfico de Pessoas
-        (function(){
-          const canvas = document.getElementById('graficoPessoas');
-          const panel = document.getElementById('ticketPanelPessoas');
-          const panelBody = document.getElementById('ticketPanelBodyPessoas');
-          const btnClose = document.getElementById('closeTicketPanelPessoas');
-          if (!canvas || !panel) return;
-          canvas.addEventListener('click', function(evt){
-            const chart = Chart.getChart(canvas);
-            if (!chart) return;
-            const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
-            if (!points.length) return;
-            const idx = points[0].index;
-            const label = (chart.data.labels?.[idx] ?? '').toString();
-            const items = ticketsByPessoa[label] ?? [];
-            if (!items.length) {
-              panelBody.innerHTML = `<p class="text-muted mb-0">Sem tickets para "${label}".</p>`;
-            } else {
-              const html = items.map(item => {
-                const title = item.titulo || item.title || item.nome || item.descricao || `Ticket ${item.id ?? ''}`;
-                const code = item.id || item.numero || item.num || item.codigo || item.code || item.chave || item.key;
-                const badgeInner = code ? `#${code}` : '';
-                const badge = code
-                  ? (item.url
-                      ? `<a href="${item.url}" target="_blank" rel="noopener" class="text-decoration-none"><span class="badge bg-secondary">${badgeInner}</span></a>`
-                      : `<span class="badge bg-secondary">${badgeInner}</span>`)
-                  : '';
-                return `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${title}</span>${badge}</li>`;
-              }).join('');
-              panelBody.innerHTML = `<h6 class="mb-2">Tickets: ${label} <span class=\"text-muted\">(${items.length})</span></h6><ul class="list-group list-group-flush">${html}</ul>`;
+
+            // People Chart
+            const peopleCtx = document.getElementById('graficoPessoas');
+            if (peopleCtx) {
+                new Chart(peopleCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: {!! json_encode(array_keys($people)) !!},
+                        datasets: [{
+                            label: 'Testes por Pessoa',
+                            data: {!! json_encode(array_values($people)) !!},
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    color: '#fff'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: '#fff'
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Testes por Pessoa',
+                                color: '#fff',
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        }
+                    }
+                });
             }
-            panel.classList.remove('d-none');
-          });
-          btnClose?.addEventListener('click', ()=>{
-            panel.classList.add('d-none');
-          });
-        })();
-        // Clique no donut para abrir/atualizar painel (na mesma card)
-        (function(){
-          const donutCanvas = document.getElementById('donutChart');
-          const ticketPanel = document.getElementById('ticketPanel');
-          const ticketPanelBody = document.getElementById('ticketPanelBody');
-          const closeTicketPanel = document.getElementById('closeTicketPanel');
-          const donutCol = document.getElementById('donutCol');
-          const ticketCol = document.getElementById('ticketCol');
-          if (!donutCanvas || !ticketPanel) return;
-          donutCanvas.addEventListener('click', function(evt) {
-            const chart = Chart.getChart(donutCanvas);
-            if (!chart) return;
-            const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
-            if (!points.length) return;
-            const idx = points[0].index;
-            const label = (chart.data.labels?.[idx] ?? '').toString();
-            const items = ticketsByStatus[String(label).toLowerCase()] ?? [];
-            if (!items.length) {
-              ticketPanelBody.innerHTML = `<p class="text-muted mb-0">Sem tickets para "${label}".</p>`;
-            } else {
-              const html = items.map(raw => {
-                const isStr = typeof raw === 'string';
-                const item = isStr ? { titulo: raw } : raw;
-                const title = item.titulo || item.title || item.nome || item.descricao || (isStr ? raw : `Ticket ${item.id ?? ''}`);
-                let code = item.id || item.numero || item.num || item.codigo || item.code || item.chave || item.key;
-                if (!code && isStr) {
-                  const m = String(raw).match(/([A-Za-z]{2,}-?\d+|\b\d{2,}\b)/);
-                  if (m) code = m[1];
-                }
-                const badgeInner = code ? `#${code}` : '';
-                const badge = code
-                  ? (item.url
-                      ? `<a href="${item.url}" target="_blank" rel="noopener" class="text-decoration-none"><span class="badge bg-secondary">${badgeInner}</span></a>`
-                      : `<span class="badge bg-secondary">${badgeInner}</span>`)
-                  : '';
-                // Title (resumo) não é clicável; somente o badge
-                return `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${title}</span>${badge}</li>`;
-              }).join('');
-              ticketPanelBody.innerHTML = `<h6 class="mb-2">Tickets: ${label} <span class=\"text-muted\">(${items.length})</span></h6><ul class="list-group list-group-flush">${html}</ul>`;
-            }
-            // Mostrar coluna de tickets e reduzir coluna do donut
-            ticketCol?.classList.remove('d-none');
-            donutCol?.classList.remove('col-12');
-            donutCol?.classList.add('col-lg-7','col-md-7','col-sm-12');
-            ticketPanel.classList.remove('d-none');
-          });
-          closeTicketPanel?.addEventListener('click', () => {
-            ticketPanel.classList.add('d-none');
-            // Esconder coluna de tickets e centralizar novamente o donut
-            ticketCol?.classList.add('d-none');
-            donutCol?.classList.remove('col-lg-7','col-md-7','col-sm-12');
-            donutCol?.classList.add('col-12');
-          });
-        })();
-        // HTML legend (vertical, bottom-left)
-        (function(){
-          const legendContainer = document.getElementById('donutLegend');
-          const canvasEl = document.getElementById('donutChart');
-          const chart = Chart.getChart(canvasEl);
-          if (!legendContainer || !chart) return;
-          function renderLegend() {
-            legendContainer.innerHTML = '';
-            const items = chart.options.plugins.legend.labels.generateLabels(chart);
-            items.forEach(item => {
-              const li = document.createElement('div');
-              li.className = 'legend-item';
-              li.style.opacity = item.hidden ? '0.5' : '1';
-              li.onclick = () => {
-                chart.toggleDataVisibility(item.index);
-                chart.update();
-                renderLegend();
-              };
-              const box = document.createElement('span');
-              box.className = 'legend-box';
-              box.style.background = item.fillStyle;
-              box.style.borderColor = item.strokeStyle;
-              const label = document.createElement('span');
-              label.textContent = item.text;
-              legendContainer.appendChild(li);
-              li.appendChild(box);
-              li.appendChild(label);
-            });
-          }
-          renderLegend();
-        })();
-        new Chart(document.getElementById('graficoPessoas'), {
-            type: 'bar',
-            data: {
-                labels: {!! json_encode(array_keys($porPessoa ?? [])) !!},
-                datasets: [{
-                    label: 'Testes Realizados',
-                    data: {!! json_encode(array_values($porPessoa ?? [])) !!},
-                    backgroundColor: colors.responsavel,
-                    hoverBackgroundColor: colors.responsavelHover,
-                    borderColor: colors.responsavelBorder,
-                    borderWidth: 1,
-                    borderRadius: 5
-                }]
-            },
-            options: {
-                plugins: {
-                    title: { display: true, text: 'Testes por Responsável', font: { size: 16 } }
-                },
-                scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: gridColor }, border: { color: axisBorderColor } },
-                    x: { grid: { color: gridColor }, border: { color: axisBorderColor } }
-                }
+
+            // Structures Chart
+            const structureCtx = document.getElementById('graficoEstruturas');
+            if (structureCtx) {
+                new Chart(structureCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: {!! json_encode(array_keys($structures)) !!},
+                        datasets: [{
+                            label: 'Testes por Estrutura',
+                            data: {!! json_encode(array_values($structures)) !!},
+                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    color: '#fff'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: '#fff'
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Testes por Estrutura',
+                                color: '#fff',
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        }
+                    }
+                });
             }
         });
-        new Chart(document.getElementById('graficoEstruturas'), {
-            type: 'bar',
-            data: {
-                labels: {!! json_encode(array_keys($estruturas ?? [])) !!},
-                datasets: [{
-                    label: 'Quantidade de Testes',
-                    data: {!! json_encode(array_values($estruturas ?? [])) !!},
-                    backgroundColor: '#0042cf',
-                    borderRadius: 5
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    title: { display: true, text: 'Distribuição por Estrutura', font: { size: 16 } }
-                },
-                scales: {
-                    x: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: gridColor }, border: { color: axisBorderColor } },
-                    y: { grid: { color: gridColor }, border: { color: '#ffffff' } }
-                }
-            }
-        });
-        // Clique no gráfico de Estruturas
-        (function(){
-          const canvas = document.getElementById('graficoEstruturas');
-          const panel = document.getElementById('ticketPanelEstruturas');
-          const panelBody = document.getElementById('ticketPanelBodyEstruturas');
-          const btnClose = document.getElementById('closeTicketPanelEstruturas');
-          if (!canvas || !panel) return;
-          canvas.addEventListener('click', function(evt){
-            const chart = Chart.getChart(canvas);
-            if (!chart) return;
-            const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
-            if (!points.length) return;
-            const idx = points[0].index;
-            const label = (chart.data.labels?.[idx] ?? '').toString();
-            const items = ticketsByEstrutura[label] ?? [];
-            if (!items.length) {
-              panelBody.innerHTML = `<p class=\"text-muted mb-0\">Sem tickets para \"${label}\".</p>`;
-            } else {
-              const html = items.map(item => {
-                const title = item.titulo || item.title || item.nome || item.descricao || `Ticket ${item.id ?? ''}`;
-                const code = item.id || item.numero || item.num || item.codigo || item.code || item.chave || item.key;
-                const badgeInner = code ? `#${code}` : '';
-                const badge = code
-                  ? (item.url
-                      ? `<a href="${item.url}" target="_blank" rel="noopener" class="text-decoration-none"><span class="badge bg-secondary">${badgeInner}</span></a>`
-                      : `<span class="badge bg-secondary">${badgeInner}</span>`)
-                  : '';
-                return `<li class=\"list-group-item d-flex justify-content-between align-items-center\"><span>${title}</span>${badge}</li>`;
-              }).join('');
-              panelBody.innerHTML = `<h6 class=\"mb-2\">Tickets: ${label} <span class=\"text-muted\">(${items.length})</span></h6><ul class=\"list-group list-group-flush\">${html}</ul>`;
-            }
-            panel.classList.remove('d-none');
-          });
-          btnClose?.addEventListener('click', ()=>{
-            panel.classList.add('d-none');
-          });
-        })();
     </script>
     <footer class="footer mt-4 py-3">
       <div class="container text-center">
@@ -384,5 +394,6 @@
         <span>Versão 1.0.0</span>
       </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

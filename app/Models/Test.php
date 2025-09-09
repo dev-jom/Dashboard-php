@@ -14,7 +14,8 @@ class Test extends Model
         'estrutura',
         'atribuido_a',
         'resultado',
-        'data_teste'
+        'data_teste',
+        'sprint'
     ];
 
     protected $casts = [

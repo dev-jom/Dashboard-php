@@ -66,6 +66,17 @@ class TestImporter
                 $tipo = $norm['tipo_teste'] ?? $norm['tipo'] ?? $norm['tipo_de_teste'] ?? null;
                 $link = $norm['link_tarefa'] ?? $norm['link_da_tarefa'] ?? $norm['url'] ?? $norm['link'] ?? null;
                 $dataTeste = $norm['data_teste'] ?? $norm['data'] ?? $norm['date'] ?? $norm['data_do_teste'] ?? null;
+                $sprint = $norm['sprint'] ?? $row['Sprint'] ?? null;
+
+                // Log para depuração
+                if (app()->environment('local')) {
+                    \Log::info('Dados da sprint:', [
+                        'sprint' => $sprint,
+                        'has_sprint' => isset($row['Sprint']),
+                        'norm_keys' => array_keys($norm),
+                        'row' => $row
+                    ]);
+                }
 
                 if ($dataTeste) {
                     try {
@@ -93,6 +104,7 @@ class TestImporter
                     'atribuido_a' => $atribuido,
                     'resultado' => $resultado,
                     'data_teste' => $dataTeste,
+                    'sprint' => $sprint,
                 ]);
                 $inserted++;
             }
