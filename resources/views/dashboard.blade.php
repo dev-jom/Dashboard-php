@@ -133,7 +133,7 @@
          </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="chart-container">
+                <div class="chart-container chart-container-estruturas mb-4">
                     <canvas id="graficoEstruturas"></canvas>
                 </div>
                 <div id="ticketPanelEstruturas" class="ticket-panel border rounded p-2 d-none mt-2">
@@ -178,6 +178,10 @@
             // Percentuais (com fallback vazio caso não exista a variável no backend)
             const donutLabels = {!! json_encode(array_keys($percentages ?? [])) !!};
             const donutPercents = {!! json_encode(array_values($percentages ?? [])) !!};
+
+            // Tickets auxiliares para os outros gráficos
+            const ticketsPorPessoa = {!! json_encode($ticketsPorPessoa ?? []) !!}; // { "Fulano": [{id,titulo,url}], ... }
+            const ticketsPorEstrutura = {!! json_encode($ticketsPorEstrutura ?? []) !!}; // { "ERP": [{...}], ... }
 
             // Donut Chart
             const donutCtx = document.getElementById('donutChart');
@@ -275,15 +279,17 @@
             // People Chart
             const peopleCtx = document.getElementById('graficoPessoas');
             if (peopleCtx) {
-                new Chart(peopleCtx, {
+                const peopleLabels = {!! json_encode(array_keys($people)) !!};
+                const peopleData = {!! json_encode(array_values($people)) !!};
+                const peopleChart = new Chart(peopleCtx, {
                     type: 'bar',
                     data: {
-                        labels: {!! json_encode(array_keys($people)) !!},
+                        labels: peopleLabels,
                         datasets: [{
                             label: 'Testes por Pessoa',
-                            data: {!! json_encode(array_values($people)) !!},
-                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
+                            data: peopleData,
+                            backgroundColor: 'rgb(4, 0, 230)',
+                            borderColor: 'rgb(4, 0, 230)',
                             borderWidth: 1
                         }]
                     },
@@ -321,24 +327,61 @@
                                 font: {
                                     size: 16
                                 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const val = context.parsed.y ?? context.parsed;
+                                        const data = context.chart.data.datasets[0].data || [];
+                                        const total = data.reduce((a,b) => a + (Number(b)||0), 0);
+                                        const pct = total > 0 ? ((val/total)*100).toFixed(1) : 0;
+                                        return `${val} (${pct}%)`;
+                                    }
+                                }
                             }
                         }
                     }
                 });
+
+                // Clique na barra -> abre modal com lista de tickets da pessoa
+                peopleCtx.onclick = function(evt) {
+                  // Usa 'index' e intersect: false para facilitar o clique em qualquer ponto da barra
+                  const points = peopleChart.getElementsAtEventForMode(evt, 'index', { intersect: false }, true);
+                  if (!points || !points.length) return;
+                  const idx = points[0].index;
+                  const label = (peopleChart.data.labels[idx] || '').trim();
+                  const tickets = (ticketsPorPessoa && ticketsPorPessoa[label]) ? ticketsPorPessoa[label] : [];
+                  if (!tickets.length) return;
+                  const modalTitle = document.getElementById('ticketModalLabel');
+                  const modalBody = document.getElementById('ticketModalBody');
+                  modalTitle.textContent = `Tickets - ${label}`;
+                  modalBody.innerHTML = tickets.map(t => `
+                    <div class="d-flex align-items-start mb-2">
+                      <span class="badge me-2" style="background-color:rgb(4, 0, 230);color:#fff;">Dev</span>
+                      <a href="${t.url}" target="_blank" rel="noopener" class="link-light text-decoration-underline">
+                        #${t.id} - ${t.titulo}
+                      </a>
+                    </div>
+                  `).join('');
+                  const bsModal = new bootstrap.Modal(document.getElementById('ticketModal'));
+                  bsModal.show();
+                };
             }
 
             // Structures Chart
             const structureCtx = document.getElementById('graficoEstruturas');
             if (structureCtx) {
-                new Chart(structureCtx, {
+                const estruturaLabels = {!! json_encode(array_keys($structures)) !!};
+                const estruturaData = {!! json_encode(array_values($structures)) !!};
+                const estruturasChart = new Chart(structureCtx, {
                     type: 'bar',
                     data: {
-                        labels: {!! json_encode(array_keys($structures)) !!},
+                        labels: estruturaLabels,
                         datasets: [{
                             label: 'Testes por Estrutura',
-                            data: {!! json_encode(array_values($structures)) !!},
-                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: estruturaData,
+                            backgroundColor: 'rgb(4, 0, 230)',
+                            borderColor: 'rgb(4, 0, 230)',
                             borderWidth: 1
                         }]
                     },
@@ -377,10 +420,44 @@
                                 font: {
                                     size: 16
                                 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const val = context.parsed.x ?? context.parsed;
+                                        const data = context.chart.data.datasets[0].data || [];
+                                        const total = data.reduce((a,b) => a + (Number(b)||0), 0);
+                                        const pct = total > 0 ? ((val/total)*100).toFixed(1) : 0;
+                                        return `${val} (${pct}%)`;
+                                    }
+                                }
                             }
                         }
                     }
                 });
+
+                // Clique na barra -> abre modal com lista de tickets da estrutura
+                structureCtx.onclick = function(evt) {
+                  const points = estruturasChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+                  if (!points || !points.length) return;
+                  const idx = points[0].index;
+                  const label = estruturasChart.data.labels[idx];
+                  const tickets = (ticketsPorEstrutura && ticketsPorEstrutura[label]) ? ticketsPorEstrutura[label] : [];
+                  if (!tickets.length) return;
+                  const modalTitle = document.getElementById('ticketModalLabel');
+                  const modalBody = document.getElementById('ticketModalBody');
+                  modalTitle.textContent = `Tickets - ${label}`;
+                  modalBody.innerHTML = tickets.map(t => `
+                    <div class=\"d-flex align-items-start mb-2\">
+                      <span class=\"badge me-2\" style=\"background-color:rgb(4, 0, 230);color:#fff;\">Estrutura</span>
+                      <a href=\"${t.url}\" target=\"_blank\" rel=\"noopener\" class=\"link-light text-decoration-underline\">
+                        #${t.id} - ${t.titulo}
+                      </a>
+                    </div>
+                  `).join('');
+                  const bsModal = new bootstrap.Modal(document.getElementById('ticketModal'));
+                  bsModal.show();
+                };
             }
         });
     </script>
@@ -391,7 +468,7 @@
         <span class="text-muted d-block d-md-inline">Feito por 
           <a href="https://github.com/dev-jom" target="_blank" rel="noopener" class="footer-link">Jonathas</a>
         </span> <br>
-        <span>Versão 1.0.0</span>
+        <span>Versão 1.3.0</span>
       </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

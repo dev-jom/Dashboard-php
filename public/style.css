@@ -243,3 +243,21 @@ body {
   text-decoration: underline;
 }
 
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 550px; /* altura padrão maior */
+}
+
+@media (max-width: 576px) {
+  .chart-container {
+    height: 380px; /* em telas pequenas, um pouco menor */
+  }
+}
+
+/* Altura específica para o gráfico de Estruturas */
+
+
+
+
+.footer { margin-top: 1.5rem; }

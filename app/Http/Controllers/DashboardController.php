@@ -97,6 +97,27 @@ class DashboardController extends Controller
                 }
             });
 
+        // Build tickets per person (for People chart modal)
+        $ticketsPorPessoa = [];
+        $peopleTicketsQuery = $sprint ? Test::where('sprint', $sprint) : new Test;
+        $peopleTicketsQuery->select('atribuido_a', 'numero_ticket', 'resumo_tarefa', 'link_tarefa')
+            ->whereNotNull('atribuido_a')
+            ->where('atribuido_a', '!=', '')
+            ->chunk(200, function ($chunk) use (&$ticketsPorPessoa) {
+                foreach ($chunk as $ticket) {
+                    $nome = trim($ticket->atribuido_a);
+                    if ($nome === '') continue;
+                    if (!isset($ticketsPorPessoa[$nome])) {
+                        $ticketsPorPessoa[$nome] = [];
+                    }
+                    $ticketsPorPessoa[$nome][] = [
+                        'id' => $ticket->numero_ticket,
+                        'titulo' => $ticket->resumo_tarefa,
+                        'url' => $ticket->link_tarefa,
+                    ];
+                }
+            });
+
         // Totals by resultado (status)
         $totais = (clone $query)
             ->select('resultado')
@@ -148,7 +169,7 @@ class DashboardController extends Controller
         $ticketsPorEstrutura = [];
         $structureTicketQuery = $sprint ? Test::where('sprint', $sprint) : new Test;
         $structureTicketQuery->select('estrutura', 'numero_ticket', 'resumo_tarefa', 'link_tarefa')
-            ->chunk(100, function ($chunk) use (&$ticketsPorEstrutura) {
+            ->chunk(200, function ($chunk) use (&$ticketsPorEstrutura) {
                 foreach ($chunk as $ticket) {
                     $estruturas = is_array($ticket->estrutura) ? $ticket->estrutura : [$ticket->estrutura];
                     foreach ($estruturas as $est) {
