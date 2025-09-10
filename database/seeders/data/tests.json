@@ -669,5 +669,27 @@
         "DATA DO TESTE": "09/09/2025",
         "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20366",
         "Sprint": "Sprint 147 (28/08/2025 - 10/09/2025)"
+    },
+    {
+        "Tipo de Teste": "TESTE HOMOLOG",
+        "#Número do Ticket": "20357",
+        "Resumo da Tarefa": "Desalinhamento no carrossel de notícias e sobreposição de elementos nas páginas de Legislação e Publicações",
+        "Estrutura": "PMS",
+        "Atribuído a": "Kayo",
+        "Resultado": "Validado",
+        "DATA DO TESTE": "10/09/2025",
+        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20357",
+        "Sprint": "Sprint 147 (28/08/2025 - 10/09/2025)"
+    },
+    {
+        "Tipo de Teste": "TESTE HOMOLOG",
+        "#Número do Ticket": "20366",
+        "Resumo da Tarefa": "Adicionar funcionalidade de exportação dos DataTables em CSV, PDF e TXT",
+        "Estrutura": ["PMS", "SINERGIA"],
+        "Atribuído a": "Murillo",
+        "Resultado": "Validado",
+        "DATA DO TESTE": "10/09/2025",
+        "Link da tarefa": "https://redmine.pbsoft.com.br/issues/20366",
+        "Sprint": "Sprint 147 (28/08/2025 - 10/09/2025)"
     }
 ]
