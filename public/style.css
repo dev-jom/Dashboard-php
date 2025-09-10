@@ -249,9 +249,17 @@ body {
   height: 550px; /* altura padrão maior */
 }
 
+/* Aumenta especificamente o tamanho do gráfico de estruturas */
+.chart-container-estruturas {
+  height: 1000px; /* mais alto para acomodar mais barras */
+}
+
 @media (max-width: 576px) {
   .chart-container {
     height: 380px; /* em telas pequenas, um pouco menor */
+  }
+  .chart-container-estruturas {
+    height: 600px; /* ainda maior que o padrão mesmo em telas pequenas */
   }
 }
 
