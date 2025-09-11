@@ -41,9 +41,14 @@
     </div>
   </div>
   <div>
-    <a class="AddData btn" href="{{ route('publicacoes.index') }}" title="Ir para Publicações">
+   <!-- <a class="AddData btn" href="{{ route('portal.database') }}" title="Ir para Publicações">
     <i class="fa-solid fa-database"></i>
-    </a>
+    </a>  -->
+    <a class="AddData btn"
+   href="{{ route('portal.login', ['intended' => route('publicacoes.index')]) }}"
+   title="Ir para Publicações">
+  <i class="fa-solid fa-database"></i>
+</a> 
   </div>
 </nav>
 

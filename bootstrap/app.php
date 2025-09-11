@@ -11,7 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Route middleware aliases
+        $middleware->alias([
+            'portal.basic' => \App\Http\Middleware\PortalBasicAuth::class,
+            'portal.session' => \App\Http\Middleware\PortalSessionAuth::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
