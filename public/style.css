@@ -17,8 +17,6 @@ body {
 }
 
 
-
-
 .info-box {
   display: flex;
   min-height: 80px;
@@ -29,6 +27,15 @@ body {
   margin-bottom: 1rem;
   align-items: stretch;
   color: #fff;
+}
+
+.AddData {
+  background-color: black;
+  color: white(50%);
+}
+
+.btn:hover {
+  color: white;
 }
 
 .info-box .info-box-icon {
@@ -263,9 +270,16 @@ body {
   }
 }
 
-
-
-
-
+/* Scoped sizing for action buttons in Publicações list */
+.table-actions .btn {
+  padding: 0.25rem 0.5rem;   /* compact like btn-sm */
+  line-height: 1;
+  border-radius: 0.375rem;
+}
+.table-actions i,
+.table-actions .fa,
+.table-actions .bi {
+  font-size: 0.875rem; /* ~14px */
+}
 
 .footer { margin-top: 1.5rem; }
