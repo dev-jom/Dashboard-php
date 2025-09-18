@@ -219,7 +219,6 @@
                             title: { display: false },
                             tooltip: {
                                 callbacks: {
-                                  // Exibe apenas o valor com o símbolo de porcentagem
                                   label: function(context) {
                                     const val = context.formattedValue ?? context.parsed;
                                     return `${val}%`;
@@ -230,16 +229,16 @@
                     }
                 });
 
-                // Clique no segmento -> abre modal com lista de tickets (ou redireciona se houver apenas 1)
+                // Função ao clicar gerar modal
                 donutCtx.onclick = function(evt) {
                   const points = donutChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
                   if (!points || !points.length) return;
                   const idx = points[0].index;
-                  const statusLabel = donutChart.data.labels[idx]; // e.g., 'Aprovado'
+                  const statusLabel = donutChart.data.labels[idx]; 
                   const key = (statusLabel || '').toLowerCase();
                   const tickets = (ticketsPorStatus && ticketsPorStatus[key]) ? ticketsPorStatus[key] : [];
                   if (!tickets.length) return;
-                  // Monta lista no modal
+                  // Lista no modal
                   const modalTitle = document.getElementById('ticketModalLabel');
                   const modalBody = document.getElementById('ticketModalBody');
                   modalTitle.textContent = `Tickets - ${statusLabel}`;

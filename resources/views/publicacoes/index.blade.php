@@ -8,7 +8,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 </head>
-<body class="bg-dark text-light">
+<body class="bg-custom text-light">
   <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="h4 mb-0">Lista de Testes</h1>
@@ -41,16 +41,16 @@
       <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="table-responsive bg-white rounded shadow-sm text-dark">
+    <div class="table-responsive">
       <table class="table table-sm table-hover align-middle mb-0">
         <thead class="table-light">
           <tr>
             <th style="width: 60px;">ID</th>
             <th>Título</th>
-            <th>Categoria/Estrutura</th>
-            <th>Responsável</th>
+            <th>Estrutura</th>
+            <th>Dev</th>
             <th>Resultado</th>
-            <th>Data do teste</th>
+            <th>Data</th>
             <th>Sprint</th>
             <th style="width: 120px;">Ações</th>
           </tr>
@@ -62,7 +62,7 @@
               <td>
                 <div class="fw-semibold">{{ $t->resumo_tarefa }}</div>
                 @if($t->link_tarefa)
-                  <a href="{{ $t->link_tarefa }}" target="_blank" class="small">Abrir tarefa</a>
+                  <a href="{{ $t->link_tarefa }}" target="_blank" class="small opn-cst">Abrir tarefa</a>
                 @endif
               </td>
               <td>
