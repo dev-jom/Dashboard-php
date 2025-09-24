@@ -6,8 +6,10 @@ use App\Http\Controllers\ImportController;
 use App\Http\Controllers\PublicacaoController;
 use App\Http\Controllers\PortalAuthController;
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['portal.session'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 Route::get('/import', [ImportController::class, 'form'])->name('import.form');
 Route::post('/import', [ImportController::class, 'import'])->name('import.run');
 // CRUD de Publicações usando o modelo Test
