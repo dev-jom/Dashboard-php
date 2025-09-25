@@ -1,25 +1,19 @@
-# /.htaccess (RAIZ) — remove WWW + força HTTPS + envia para /public
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # 1) Remove WWW (ex.: www.sub.dominio → sub.dominio)
+    # 1) Remove WWW
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
     RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
 
-    # 2) Força HTTPS (mesmo atrás de proxy/CDN)
-    RewriteCond %{HTTP:X-Forwarded-Proto} !https [OR]
-    RewriteCond %{HTTPS} !=on
+    # 2) Força HTTPS apenas se não estiver em HTTPS
+    RewriteCond %{HTTPS} off
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-    # 3) Redireciona tudo para /public (evita loop e não interfere no ACME)
+    # 3) Redireciona tudo para /public
     RewriteCond %{REQUEST_URI} !^/public/ [NC]
     RewriteCond %{REQUEST_URI} !^/\.well-known/ [NC]
     RewriteRule ^(.*)$ /public/$1 [L]
 </IfModule>
-
-<FilesMatch "\.html$">
-    ForceType text/html
-</FilesMatch>
 
 # php -- BEGIN cPanel-generated handler, do not edit
 # Set the “ea-php82” package as the default “PHP” programming language.
