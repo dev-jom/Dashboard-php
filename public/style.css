@@ -363,7 +363,7 @@ body {
 --bs-table-color-state: initial;
 --bs-table-bg-state: initial;
 --bs-table-color: #afabab;
---bs-table-bg: #000000;
+--bs-table-bg: #212529;
 --bs-table-border-color: white;
 --bs-table-accent-bg: transparent;
 --bs-table-striped-color: var(--bs-body-color);
@@ -384,7 +384,7 @@ border-color: var(--bs-table-border-color);
 
 .table-light {
   --bs-table-color: #ffffff;
-  --bs-table-bg: #000000;
+  --bs-table-bg: #212529;
   --bs-table-border-color: #dfe0e1;
   --bs-table-striped-bg: #ecedee;
   --bs-table-striped-color: #000;

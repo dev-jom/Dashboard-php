@@ -8,7 +8,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 </head>
-<body class="bg-custom text-light">
+<body class="bg-dark text-light">
   <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="h4 mb-0">Lista de Testes</h1>
@@ -42,7 +42,7 @@
     @endif
 
     <div class="table-responsive">
-      <table class="table table-sm table-hover align-middle mb-0">
+      <table class="table table-sm table-hover align-middle mb-0 text-light">
         <thead class="table-light">
           <tr>
             <th style="width: 60px;">ID</th>
@@ -62,14 +62,14 @@
               <td>
                 <div class="fw-semibold">{{ $t->resumo_tarefa }}</div>
                 @if($t->link_tarefa)
-                  <a href="{{ $t->link_tarefa }}" target="_blank" class="small opn-cst">Abrir tarefa</a>
+                  <a href="{{ $t->link_tarefa }}" target="_blank" class="small text-light text-opacity-75 text-decoration-underline">Abrir tarefa</a>
                 @endif
               </td>
               <td>
                 @php
                   $estruturas = is_array($t->estrutura) ? $t->estrutura : (empty($t->estrutura) ? [] : [$t->estrutura]);
                 @endphp
-                <div class="small">{{ implode(', ', $estruturas) }}</div>
+                <div class="small text-light">{{ implode(', ', $estruturas) }}</div>
               </td>
               <td>{{ $t->atribuido_a }}</td>
               <td>{{ $t->resultado }}</td>
